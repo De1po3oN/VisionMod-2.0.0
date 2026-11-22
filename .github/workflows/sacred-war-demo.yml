@@ -5,24 +5,53 @@ on:
 permissions:
   contents: write
 jobs:
-  probe:
+  demo:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - run: python3 tests/probe-sacred-war.py > sacred-war-probe.json
+      - name: Match a public recording and available timed lyrics
+        run: python3 tests/prepare-sacred-war.py | tee sacred-war-recording.log
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.7.1'
+      - name: Install the playback engine
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends vlc-bin vlc-plugin-base
+      - name: Prepare Minecraft
+        run: gradle -PvisualGameTest gametestClasses downloadAssets --no-daemon --console=plain --max-workers=2
+      - name: Play the song through VLC and capture automatic World Lyrics
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          MESA_GL_VERSION_OVERRIDE: '3.3'
+        run: dbus-run-session -- xvfb-run -a -s '-screen 0 1280x720x24' bash tests/play-sacred-war.sh
       - uses: actions/checkout@v4
+        if: always()
         with:
           ref: codex/visual-evidence
           path: .qa-evidence
-      - name: Retain catalog and recording evidence
+      - name: Retain only metadata, diagnostics and actual Minecraft captures
+        if: always()
         run: |
-          mkdir -p .qa-evidence/sacred-war
-          cp sacred-war-probe.json .qa-evidence/sacred-war/providers.json
+          out=.qa-evidence/sacred-war
+          mkdir -p "$out"
+          rm -f "$out"/sacred-war-*.png "$out"/recording.json "$out"/*.log
+          for file in sacred-war-*.log "$RUNNER_TEMP/sacred-war/recording.json" build/run/clientGameTest/vision-world-captures/sacred-war-*.png; do
+            if test -f "$file"; then cp "$file" "$out"; fi
+          done
+          printf 'source=%s\nrun=%s\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" > "$out/source.txt"
           git -C .qa-evidence config user.name 'github-actions[bot]'
           git -C .qa-evidence config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git -C .qa-evidence add sacred-war/providers.json
+          git -C .qa-evidence add sacred-war
           git -C .qa-evidence diff --cached --quiet && exit 0
-          git -C .qa-evidence commit -m 'Record Sacred War public media metadata'
-          git -C .qa-evidence pull --rebase origin codex/visual-evidence
-          git -C .qa-evidence push origin HEAD:codex/visual-evidence
+          git -C .qa-evidence commit -m 'Record live player World Lyrics demonstration'
+          for attempt in 1 2 3; do
+            git -C .qa-evidence pull --rebase origin codex/visual-evidence
+            if git -C .qa-evidence push origin HEAD:codex/visual-evidence; then exit 0; fi
+          done
+          exit 1

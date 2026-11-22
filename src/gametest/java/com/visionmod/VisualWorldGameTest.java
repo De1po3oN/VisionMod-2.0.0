@@ -15,6 +15,11 @@ public final class VisualWorldGameTest implements FabricClientGameTest {
             mc.options.pauseOnLostFocus=false;
         });
         context.waitTicks(5);
+        if ("1".equals(System.getenv("VISION_SACRED_WAR_DEMO"))) {
+            try { SacredWarDemo.run(context); }
+            catch (Exception e) { throw new IllegalStateException("Sacred War demo failed", e); }
+            return;
+        }
         try(var world=context.worldBuilder().create()){
             world.getServer().runCommand("gamemode creative @p");
             world.getServer().runCommand("time set day");
