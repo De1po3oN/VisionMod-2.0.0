@@ -24,11 +24,13 @@ def api(url, **params):
     return json.loads(fetch(url + '?' + urlencode(params), 1024 * 1024))
 
 
-def archive_item(identifier, label):
+def archive_item(identifier, label, album=False):
     page = json.loads(fetch('https://archive.org/metadata/' + identifier, 1024 * 1024))
-    formats = {'VBR MP3', 'MP3', 'Ogg Vorbis', 'FLAC'}
+    formats = {'VBR MP3', 'MP3', 'Ogg Vorbis', 'FLAC', 'WAVE', 'MPEG4', 'Apple Audio Lossless'}
     for item in page.get('files', []):
-        if item.get('format') in formats and 0 < int(item.get('size', 0)) <= LIMIT:
+        name = item.get('name', '').casefold()
+        known_track = any(term in name for term in ('sacred war', 'sacred_war', 'svyashchenn', 'holy war', 'священная'))
+        if (not album or known_track) and item.get('format') in formats and 0 < int(item.get('size', 0)) <= LIMIT:
             yield 'https://archive.org/download/' + identifier + '/' + quote(item['name']), label
 
 
@@ -57,8 +59,21 @@ for identifier in ('piste-02_202011',):
         sources.extend(archive_item(identifier, 'A. Alexandrov Red Army Choir recording on Internet Archive'))
     except Exception as error:
         print(json.dumps({'id': identifier, 'error': str(error)}, ensure_ascii=False), flush=True)
+try:
+    result = api('https://archive.org/advancedsearch.php',
+                 q='(title:"red army choir" OR title:"alexandrov ensemble") AND mediatype:audio',
+                 output='json', rows=24, **{'fl[]': 'identifier'})
+    for entry in result.get('response', {}).get('docs', []):
+        try:
+            sources.extend(archive_item(entry['identifier'], 'Red Army Choir album on Internet Archive', album=True))
+        except Exception as error:
+            print(json.dumps({'id': entry['identifier'], 'error': str(error)}, ensure_ascii=False), flush=True)
+        if len(sources) >= 8:
+            break
+except Exception as error:
+    print(json.dumps({'service': 'Internet Archive', 'error': str(error)}, ensure_ascii=False), flush=True)
 
-for url, label in sources[:5]:
+for url, label in sources[:8]:
     try:
         original, report = inspect(url, label)
     except Exception as error:
