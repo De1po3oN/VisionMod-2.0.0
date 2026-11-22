@@ -1,6 +1,6 @@
 # Vision Mod 2.0.0 · Open Beta
 
-Новый GUI: адаптивные карточки, компактная навигация и единый стиль настроек. Подпись проекта: **ТГК @cocok_ali · сервер mc.showtime.su**. [Скачать мод](https://github.com/De1po3oN/VisionMod-2.0.0/raw/f9b8e623236ff33557f6ebfcbf396ff95dbdc1af/build/visionmod-2.0.0.jar) · [Скриншот](https://raw.githubusercontent.com/De1po3oN/VisionMod-1.0.0/fbb3ccf15654feab0f13b81ef5d44e1aa7f68583/world/33-gui-desktop.png) · [Проверки](GUI_REDESIGN_QA_RU.md).
+Новый GUI: адаптивные карточки, компактная навигация и единый стиль настроек. Подпись проекта: **ТГК @cocok_ali · сервер mc.showtime.su**. [Скачать мод](https://github.com/De1po3oN/VisionMod-2.0.0/raw/f3489beae3d97f8422e3b6c27001de7dca93bb50/build/visionmod-2.0.0.jar) · [Скриншот](https://raw.githubusercontent.com/De1po3oN/VisionMod-1.0.0/fbb3ccf15654feab0f13b81ef5d44e1aa7f68583/world/33-gui-desktop.png) · [Проверки](GUI_REDESIGN_QA_RU.md).
 
 Обновление GUI, World Lyrics и Spear: плавные переключатели, Inter, появление строк, более устойчивый разбор названий и эффекты реальных действий копья. [Готовый JAR](https://github.com/De1po3oN/VisionMod-1.0.0/raw/7395c1ef68055727ca4589bbe8b7528ddc60013c/build/visionmod-2.0.0.jar) · [проверки и кадры](REFERENCE_REFRESH_QA_RU.md).
 
@@ -16,6 +16,7 @@
 Репозиторий исторически называется `VisionMod-1.0.0`; версия сборки — `2.0.0`.
 
 - **Right Shift** — меню с поиском, категориями и настройками по ПКМ. СКМ назначает горячую клавишу доступным модулям.
+- **Визуал → Скрыть ники и бирки** — скрывает подписи над игроками и именованными мобами в мире. Карточку также можно найти по слову «бирки».
 - Повторное открытие меню возвращает прежний раздел, страницу, поиск и редактор в текущем запуске Minecraft. Right Shift также закрывает его в игру; Escape в редакторе возвращает назад.
 - **Fast Scroller** в УТИЛИТАХ: Shift + колесо над слотом или Shift + ЛКМ с проведением по слотам для переноса стаков между обычным инвентарём и контейнером.
 - **End** — глобальное отключение; FPS Boost возвращает сохранённые видеонастройки.
