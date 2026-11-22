@@ -1,0 +1,37 @@
+name: Inspect dropped item render hooks
+on:
+  push:
+    branches: ['qa/item-render-hooks']
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.7.1'
+      - run: gradle -PvisualGameTest inspectMinecraftHooks --no-daemon --max-workers=2 --console=plain > item-hooks.log 2>&1
+      - uses: actions/checkout@v4
+        if: always()
+        with:
+          ref: codex/visual-evidence
+          path: .qa-evidence
+      - name: Retain the mapping trace
+        if: always()
+        run: |
+          mkdir -p .qa-evidence/item-hooks
+          cp item-hooks.log .qa-evidence/item-hooks/renderer.log
+          git -C .qa-evidence config user.name 'github-actions[bot]'
+          git -C .qa-evidence config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C .qa-evidence add item-hooks/renderer.log
+          git -C .qa-evidence diff --cached --quiet && exit 0
+          git -C .qa-evidence commit -m 'Record mapped item renderer call sites'
+          git -C .qa-evidence pull --rebase origin codex/visual-evidence
+          git -C .qa-evidence push origin HEAD:codex/visual-evidence
