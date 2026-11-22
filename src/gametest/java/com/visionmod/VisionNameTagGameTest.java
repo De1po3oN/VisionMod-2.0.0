@@ -66,7 +66,7 @@ final class VisionNameTagGameTest {
             pig.setCustomNameVisible(true);
             pig.setPos(mc.player.getX()+1, mc.player.getY(), mc.player.getZ()+2);
             var pigRenderer = mc.getEntityRenderDispatcher().getRenderer(pig);
-            var pigState = new EntityRenderState();
+            var pigState = pigRenderer.createRenderState();
             EntityRenderer.class.getMethod("extractRenderState", Entity.class, EntityRenderState.class, float.class)
                 .invoke(pigRenderer, pig, pigState, 1f);
             check(pigState.nameTag != null && pigState.nameTag.getString().equals("Vision Pig"), "Pig must have a vanilla render label");
