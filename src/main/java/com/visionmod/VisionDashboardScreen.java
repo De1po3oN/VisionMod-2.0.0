@@ -84,6 +84,8 @@ public final class VisionDashboardScreen extends Screen {
         m.add(new Module(VISUAL,"Free Look","Зажми Alt, чтобы осмотреться",
             ()->FreeLook.enabled,()->FreeLook.setEnabled(!FreeLook.enabled),
             ()->{FreeLook.smooth=!FreeLook.smooth;VisionExtras.save();}));
+        m.add(new Module(VISUAL,"Скрыть ники и бирки","Подписи над игроками и мобами в мире",
+            ()->VisionAppearance.hideEntityNames,VisionAppearance::toggleEntityNames,null));
         extras(m,HUD,"CPS Counter","Текущая скорость кликов",0);
         extras(m,HUD,"Armor HUD","Состояние надетой брони",1);
         extras(m,HUD,"Food + Sat","Голод и насыщение на одном виджете",2);

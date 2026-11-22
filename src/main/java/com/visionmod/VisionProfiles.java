@@ -82,6 +82,7 @@ public final class VisionProfiles {
         data.addProperty("appearanceAnimations",VisionAppearance.animations);
         data.addProperty("smoothHotbar",VisionAppearance.smoothHotbar);
         data.addProperty("playerBadge",VisionAppearance.playerBadge);
+        data.addProperty("hideEntityNames",VisionAppearance.hideEntityNames);
         data.addProperty("soundPreset",VisionExtendedFeatures.soundPreset());
         data.addProperty("fullBright", VisionModClient.fullBright);
         data.addProperty("oreHighlight", VisionModClient.oreHighlight);
@@ -167,6 +168,7 @@ public final class VisionProfiles {
         boolean smooth=optionalFlag(data,"freeLookSmooth",FreeLook.smooth);
         boolean smoothHotbar=optionalFlag(data,"smoothHotbar",VisionAppearance.smoothHotbar);
         boolean playerBadge=optionalFlag(data,"playerBadge",VisionAppearance.playerBadge);
+        boolean hideEntityNames=optionalFlag(data,"hideEntityNames",VisionAppearance.hideEntityNames);
         String ownLyric=optionalText(data,"ownLyric",VisionExtendedFeatures.customText());
         String friends=optionalText(data,"friends",VisionExtendedFeatures.friendNames());
         int trailStart=optionalHex(data,"trailStart",VisionWorldEffects.trailStartColor());
@@ -275,7 +277,9 @@ public final class VisionProfiles {
         VisionExtras.ambientStyle=ambientStyle;VisionExtras.ambientDensity=ambientDensity;
         VisionExtendedFeatures.setPetColor(petColor);VisionExtendedFeatures.setWorldColor(worldColor);
         VisionAppearance.brightness=brightness;VisionAppearance.handScale=handScale;
-        VisionAppearance.detail=appearanceDetail;VisionAppearance.opacity=appearanceOpacity;VisionAppearance.animations=appearanceAnimations;VisionAppearance.smoothHotbar=smoothHotbar;VisionAppearance.playerBadge=playerBadge;VisionAppearance.save();
+        VisionAppearance.detail=appearanceDetail;VisionAppearance.opacity=appearanceOpacity;VisionAppearance.animations=appearanceAnimations;VisionAppearance.smoothHotbar=smoothHotbar;VisionAppearance.playerBadge=playerBadge;
+        VisionAppearance.hideEntityNames=hideEntityNames;
+        VisionAppearance.save();
         for(int i=0;i<3&&VisionExtendedFeatures.soundPreset()!=soundPreset;i++)VisionExtendedFeatures.cycleSound();
         applyFlags(hud2,VisionFeaturePack::enabled,VisionFeaturePack::toggle);
         applyFlags(world2,VisionWorldEffects::enabled,VisionWorldEffects::toggle);

@@ -63,7 +63,7 @@ jobs:
             echo "Found a fatal client / mixin exception"
             exit 1
           fi
-          if ! grep -q '\[VisionMod\]\[SELFTEST\] PASS: 54 module toggles' smoke-client.log; then
+          if ! grep -q '\[VisionMod\]\[SELFTEST\] PASS: 55 module toggles' smoke-client.log; then
             echo "Feature toggle and persistence self-tests did not complete successfully"
             exit 1
           fi

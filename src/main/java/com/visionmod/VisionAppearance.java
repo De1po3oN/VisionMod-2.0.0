@@ -12,6 +12,7 @@ public final class VisionAppearance {
     public static boolean animations=true;
     public static boolean smoothHotbar=true;
     public static boolean playerBadge=true;
+    public static boolean hideEntityNames;
     private VisionAppearance(){}
     public static int segments(){return switch(detail){case 0->20;case 2->40;default->28;};}
     public static String quality(){return switch(detail){case 0->"ЛАКОНИЧНО";case 2->"ДЕТАЛЬНО";default->"МЯГКО";};}
@@ -20,6 +21,13 @@ public final class VisionAppearance {
     public static void cycleBrightness(){brightness=brightness==3?6:brightness==6?12:3;save();}
     public static void cycleHandScale(){handScale=handScale<.7f?.72f:handScale<.8f?.84f:.60f;save();}
     public static void toggleAnimations(){animations=!animations;save();}
+    public static void toggleEntityNames(){
+        hideEntityNames = !hideEntityNames;
+        save();
+    }
+    public static boolean entityNamesHidden(){
+        return VisionModClient.enabled && hideEntityNames;
+    }
     public static void load(){
         if(!Files.isRegularFile(FILE))return;
         try(var in=Files.newInputStream(FILE)){
@@ -31,6 +39,7 @@ public final class VisionAppearance {
             animations=Boolean.parseBoolean(p.getProperty("animations","true"));
             smoothHotbar=Boolean.parseBoolean(p.getProperty("smoothHotbar","true"));
             playerBadge=Boolean.parseBoolean(p.getProperty("playerBadge","true"));
+            hideEntityNames=Boolean.parseBoolean(p.getProperty("hideEntityNames","false"));
         }catch(Exception e){System.err.println("[VisionMod] Appearance config: "+e.getMessage());}
     }
     public static void save(){
@@ -41,6 +50,7 @@ public final class VisionAppearance {
             p.setProperty("animations",Boolean.toString(animations));
             p.setProperty("smoothHotbar",Boolean.toString(smoothHotbar));
             p.setProperty("playerBadge",Boolean.toString(playerBadge));
+            p.setProperty("hideEntityNames",Boolean.toString(hideEntityNames));
             try(var out=Files.newOutputStream(FILE)){p.store(out,"Vision visual appearance");}
         }catch(Exception e){System.err.println("[VisionMod] Appearance save: "+e.getMessage());}
     }

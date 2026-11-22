@@ -58,9 +58,12 @@ public final class VisionSelfTest {
         passed += verifyKeys("ORES", oreNames, oreKeys,
             OreSelection::enabled, OreSelection::toggle,
             FabricLoader.getInstance().getConfigDir().resolve("visionmod-ores.properties"));
+        passed += verifyKeys("APPEARANCE", new String[]{"Hide entity names"}, new String[]{"hideEntityNames"},
+            ignored -> VisionAppearance.hideEntityNames, ignored -> VisionAppearance.toggleEntityNames(),
+            FabricLoader.getInstance().getConfigDir().resolve("visionmod/appearance.properties"));
 
-        if (passed != 54) throw new IllegalStateException(
-            "[VisionMod][SELFTEST] Expected 54 toggle+save checks, got "+passed);
+        if (passed != 55) throw new IllegalStateException(
+            "[VisionMod][SELFTEST] Expected 55 toggle+save checks, got "+passed);
         if (!"FIRST".equals(VisionWorldLyrics.previewLine("FIRST | SECOND",0)) ||
             !"SECOND".equals(VisionWorldLyrics.previewLine("FIRST | SECOND",70)) ||
             !VisionWorldLyrics.previewLine("",0).isBlank())
@@ -112,7 +115,7 @@ public final class VisionSelfTest {
             throw new IllegalStateException("Item render air state broken");
         System.out.println("[VisionMod][SELFTEST] PASS: Per-item physics Mixin state.");
         System.out.println("[VisionMod][SELFTEST] PASS: Trail gradient/HEX/RGB, TAB toggle and Pet texture.");
-        System.out.println("[VisionMod][SELFTEST] PASS: 54 module toggles and their settings persistence.");
+        System.out.println("[VisionMod][SELFTEST] PASS: "+passed+" module toggles and their settings persistence.");
     }
 
     private static void testTrailsAndTab() {
