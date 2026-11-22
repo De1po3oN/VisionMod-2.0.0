@@ -230,7 +230,7 @@ public final class VisionDashboardScreen extends Screen {
         m.add(new Module(category,VisionMotionEffects.NAMES[id],
             switch(id) {
                 case 0 -> "Новая плавная анимация взмаха";
-                case 1 -> "Вращение предметов на земле";
+                case 1 -> "Предметы ложатся на землю и замирают";
                 case 2 -> "Световой след при реальном рывке копьём";
                 case 3 -> "Импульс в точке попадания копьём · включая разгон";
                 default -> "Лёгкие штрихи при движении камеры";
