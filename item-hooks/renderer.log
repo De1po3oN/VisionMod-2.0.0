@@ -1,0 +1,228 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Fabric Loom: 1.17.20
+
+Cannot remap modifiers because it does not exist in any of the targets [] or their parents.
+
+> Task :compileJava
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :processResources
+> Task :classes
+> Task :compileGametestJava
+> Task :processGametestResources
+> Task :gametestClasses
+
+> Task :inspectMinecraftHooks
+net/minecraft/client/renderer/entity/ItemEntityRenderer extends net/minecraft/client/renderer/entity/EntityRenderer
+field ITEM_MIN_HOVER_HEIGHTF
+field ITEM_BUNDLE_OFFSET_SCALEF
+field FLAT_ITEM_DEPTH_THRESHOLDF
+field itemModelResolverLnet/minecraft/client/renderer/item/ItemModelResolver;
+field randomLnet/minecraft/util/RandomSource;
+<init>(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;)V
+ call net/minecraft/client/renderer/entity/EntityRenderer.<init>(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;)V
+ call net/minecraft/util/RandomSource.create()Lnet/minecraft/util/RandomSource;
+ field net/minecraft/client/renderer/entity/ItemEntityRenderer.randomLnet/minecraft/util/RandomSource;
+ call net/minecraft/client/renderer/entity/EntityRendererProvider$Context.getItemModelResolver()Lnet/minecraft/client/renderer/item/ItemModelResolver;
+ field net/minecraft/client/renderer/entity/ItemEntityRenderer.itemModelResolverLnet/minecraft/client/renderer/item/ItemModelResolver;
+ constant 0.15
+ field net/minecraft/client/renderer/entity/ItemEntityRenderer.shadowRadiusF
+ constant 0.75
+ field net/minecraft/client/renderer/entity/ItemEntityRenderer.shadowStrengthF
+createRenderState()Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;
+ call net/minecraft/client/renderer/entity/state/ItemEntityRenderState.<init>()V
+extractRenderState(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;F)V
+ call net/minecraft/client/renderer/entity/EntityRenderer.extractRenderState(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V
+ field net/minecraft/world/entity/item/ItemEntity.bobOffsF
+ field net/minecraft/client/renderer/entity/state/ItemEntityRenderState.bobOffsetF
+ call net/minecraft/world/entity/item/ItemEntity.getItem()Lnet/minecraft/world/item/ItemStack;
+ field net/minecraft/client/renderer/entity/ItemEntityRenderer.itemModelResolverLnet/minecraft/client/renderer/item/ItemModelResolver;
+ call net/minecraft/client/renderer/entity/state/ItemEntityRenderState.extractItemGroupRenderState(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/item/ItemModelResolver;)V
+submit(Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V
+ field net/minecraft/client/renderer/entity/state/ItemEntityRenderState.itemLnet/minecraft/client/renderer/item/ItemStackRenderState;
+ call net/minecraft/client/renderer/item/ItemStackRenderState.isEmpty()Z
+ call com/mojang/blaze3d/vertex/PoseStack.pushPose()V
+ field net/minecraft/client/renderer/entity/state/ItemEntityRenderState.itemLnet/minecraft/client/renderer/item/ItemStackRenderState;
+ call net/minecraft/client/renderer/item/ItemStackRenderState.getModelBoundingBox()Lnet/minecraft/world/phys/AABB;
+ field net/minecraft/world/phys/AABB.minYD
+ constant 0.0625
+ field net/minecraft/client/renderer/entity/state/ItemEntityRenderState.ageInTicksF
+ constant 10.0
+ field net/minecraft/client/renderer/entity/state/ItemEntityRenderState.bobOffsetF
+ call net/minecraft/util/Mth.sin(D)F
+ constant 0.1
+ constant 0.1
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+ field net/minecraft/client/renderer/entity/state/ItemEntityRenderState.ageInTicksF
+ field net/minecraft/client/renderer/entity/state/ItemEntityRenderState.bobOffsetF
+ call net/minecraft/world/entity/item/ItemEntity.getSpin(FF)F
+ field com/mojang/math/Axis.YPLcom/mojang/math/Axis;
+ call com/mojang/math/Axis.rotation(F)Lorg/joml/Quaternionf;
+ call com/mojang/blaze3d/vertex/PoseStack.mulPose(Lorg/joml/Quaternionfc;)V
+ field net/minecraft/client/renderer/entity/state/ItemEntityRenderState.lightCoordsI
+ field net/minecraft/client/renderer/entity/ItemEntityRenderer.randomLnet/minecraft/util/RandomSource;
+ call net/minecraft/client/renderer/entity/ItemEntityRenderer.submitMultipleFromCount(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/ItemClusterRenderState;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/phys/AABB;)V
+ call com/mojang/blaze3d/vertex/PoseStack.popPose()V
+ call net/minecraft/client/renderer/entity/EntityRenderer.submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V
+submitMultipleFromCount(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/ItemClusterRenderState;Lnet/minecraft/util/RandomSource;)V
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.itemLnet/minecraft/client/renderer/item/ItemStackRenderState;
+ call net/minecraft/client/renderer/item/ItemStackRenderState.getModelBoundingBox()Lnet/minecraft/world/phys/AABB;
+ call net/minecraft/client/renderer/entity/ItemEntityRenderer.submitMultipleFromCount(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/ItemClusterRenderState;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/phys/AABB;)V
+submitMultipleFromCount(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/ItemClusterRenderState;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/phys/AABB;)V
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.countI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.seedI
+ call net/minecraft/util/RandomSource.setSeed(J)V
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.itemLnet/minecraft/client/renderer/item/ItemStackRenderState;
+ call net/minecraft/world/phys/AABB.getZsize()D
+ constant 0.0625
+ field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAYI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.outlineColorI
+ call net/minecraft/client/renderer/item/ItemStackRenderState.submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V
+ call com/mojang/blaze3d/vertex/PoseStack.pushPose()V
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+ field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAYI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.outlineColorI
+ call net/minecraft/client/renderer/item/ItemStackRenderState.submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V
+ call com/mojang/blaze3d/vertex/PoseStack.popPose()V
+ constant 1.5
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+ field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAYI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.outlineColorI
+ call net/minecraft/client/renderer/item/ItemStackRenderState.submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+ call com/mojang/blaze3d/vertex/PoseStack.pushPose()V
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ constant 0.5
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ constant 0.5
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+ field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAYI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.outlineColorI
+ call net/minecraft/client/renderer/item/ItemStackRenderState.submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V
+ call com/mojang/blaze3d/vertex/PoseStack.popPose()V
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+renderMultipleFromCount(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/ItemClusterRenderState;Lnet/minecraft/util/RandomSource;)V
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.itemLnet/minecraft/client/renderer/item/ItemStackRenderState;
+ call net/minecraft/client/renderer/item/ItemStackRenderState.getModelBoundingBox()Lnet/minecraft/world/phys/AABB;
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.countI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.seedI
+ call net/minecraft/util/RandomSource.setSeed(J)V
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.itemLnet/minecraft/client/renderer/item/ItemStackRenderState;
+ call net/minecraft/world/phys/AABB.getZsize()D
+ constant 0.0625
+ field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAYI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.outlineColorI
+ call net/minecraft/client/renderer/item/ItemStackRenderState.submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V
+ call com/mojang/blaze3d/vertex/PoseStack.pushPose()V
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+ field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAYI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.outlineColorI
+ call net/minecraft/client/renderer/item/ItemStackRenderState.submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V
+ call com/mojang/blaze3d/vertex/PoseStack.popPose()V
+ constant 1.5
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+ field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAYI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.outlineColorI
+ call net/minecraft/client/renderer/item/ItemStackRenderState.submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+ call com/mojang/blaze3d/vertex/PoseStack.pushPose()V
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ constant 0.5
+ call net/minecraft/util/RandomSource.nextFloat()F
+ constant 0.15
+ constant 0.5
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+ field net/minecraft/client/renderer/texture/OverlayTexture.NO_OVERLAYI
+ field net/minecraft/client/renderer/entity/state/ItemClusterRenderState.outlineColorI
+ call net/minecraft/client/renderer/item/ItemStackRenderState.submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V
+ call com/mojang/blaze3d/vertex/PoseStack.popPose()V
+ call com/mojang/blaze3d/vertex/PoseStack.translate(FFF)V
+extractRenderState(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V
+ call net/minecraft/client/renderer/entity/ItemEntityRenderer.extractRenderState(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;F)V
+createRenderState()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;
+ call net/minecraft/client/renderer/entity/ItemEntityRenderer.createRenderState()Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;
+submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V
+ call net/minecraft/client/renderer/entity/ItemEntityRenderer.submit(Lnet/minecraft/client/renderer/entity/state/ItemEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V
+net/minecraft/client/renderer/entity/state/ItemEntityRenderState extends net/minecraft/client/renderer/entity/state/ItemClusterRenderState
+field bobOffsetF
+<init>()V
+net/minecraft/client/renderer/entity/state/ItemClusterRenderState extends net/minecraft/client/renderer/entity/state/EntityRenderState
+field itemLnet/minecraft/client/renderer/item/ItemStackRenderState;
+field countI
+field seedI
+<init>()V
+extractItemGroupRenderState(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/item/ItemModelResolver;)V
+getSeedForItemStack(Lnet/minecraft/world/item/ItemStack;)I
+getRenderedAmount(I)I
+net/minecraft/client/renderer/item/ItemStackRenderState extends java/lang/Object
+field displayContextLnet/minecraft/world/item/ItemDisplayContext;
+field activeLayerCountI
+field animatedZ
+field oversizedInGuiZ
+field cachedModelBoundingBoxLnet/minecraft/world/phys/AABB;
+field layers[Lnet/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState;
+<init>()V
+ensureCapacity(I)V
+newLayer()Lnet/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState;
+clear()V
+setAnimated()V
+isAnimated()Z
+appendModelIdentityElement(Ljava/lang/Object;)V
+firstLayer()Lnet/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState;
+isEmpty()Z
+usesBlockLight()Z
+pickParticleIcon(Lnet/minecraft/util/RandomSource;)Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;
+visitExtents(Ljava/util/function/Consumer;)V
+submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V
+getModelBoundingBox()Lnet/minecraft/world/phys/AABB;
+setOversizedInGui(Z)V
+isOversizedInGui()Z
+net/minecraft/client/renderer/OrderedSubmitNodeCollector extends java/lang/Object
+submitShadow(Lcom/mojang/blaze3d/vertex/PoseStack;FLjava/util/List;)V
+submitNameTag(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZIDLnet/minecraft/client/renderer/state/CameraRenderState;)V
+submitText(Lcom/mojang/blaze3d/vertex/PoseStack;FFLnet/minecraft/util/FormattedCharSequence;ZLnet/minecraft/client/gui/Font$DisplayMode;IIII)V
+submitFlame(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lorg/joml/Quaternionf;)V
+submitLeash(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/entity/state/EntityRenderState$LeashState;)V
+submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V
+submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V
+submitModelPart(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IILnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V
+submitModelPart(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V
+submitModelPart(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ZZ)V
+submitModelPart(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ZZILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;I)V
+submitBlock(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/level/block/state/BlockState;III)V
+submitMovingBlock(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/MovingBlockRenderState;)V
+submitBlockModel(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/block/model/BlockStateModel;FFFIII)V
+submitItem(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V
+submitCustomGeometry(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/SubmitNodeCollector$CustomGeometryRenderer;)V
+submitParticleGroup(Lnet/minecraft/client/renderer/SubmitNodeCollector$ParticleGroupRenderer;)V
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795355312774.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 28s
+5 actionable tasks: 5 executed
