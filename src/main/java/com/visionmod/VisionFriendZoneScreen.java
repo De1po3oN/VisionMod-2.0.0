@@ -50,11 +50,12 @@ public final class VisionFriendZoneScreen extends VisionPanelScreen {
 
     @Override protected void draw(GuiGraphics g, int mx, int my, float delta) {
         int top = layout.bodyTop(), tabWidth = tabWidth();
-        button(g, x+16, top, tabWidth, 22, "Рядом · " + nearby.size(), !savedTab, mx, my);
+        var visiblePlayers = nearby.stream().filter(VisionExtendedFeatures.NearbyPlayer::visible).toList();
+        button(g, x+16, top, tabWidth, 22, "Рядом · " + visiblePlayers.size(), !savedTab, mx, my);
         button(g, x+26+tabWidth, top, tabWidth, 22, "Друзья · " + VisionExtendedFeatures.friendCount(), savedTab, mx, my);
         List<Row> rows = savedTab
             ? VisionExtendedFeatures.friendList().stream().map(name -> new Row(name, -1, true)).toList()
-            : nearby.stream().map(player -> new Row(player.name(), player.distance(), VisionExtendedFeatures.isFriend(player.name()))).toList();
+            : visiblePlayers.stream().map(player -> new Row(player.name(), player.distance(), VisionExtendedFeatures.isFriend(player.name()))).toList();
         int perPage = rowsPerPage();
         lastPage = Math.max(0, (rows.size()-1)/perPage);
         page = Math.min(page, lastPage);

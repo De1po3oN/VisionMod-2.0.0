@@ -14,7 +14,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.EntityHitResult;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -68,6 +67,10 @@ public final class VisionFeaturePack {
             (g, tracker) -> render(g));
     }
 
+    static LivingEntity viewedTarget() {
+        return viewed != null && viewed.isAlive() && !viewed.isInvisible() ? viewed : null;
+    }
+
     private static void tick(Minecraft mc) {
         if (mc.level == null || mc.player == null) {
             viewed=null;targetGrace=0;viewedId=-1;
@@ -82,9 +85,15 @@ public final class VisionFeaturePack {
             viewed=null;targetGrace=0;nearestTnt=nearestArrow=-1;hitPulse=0;
             lastHitSequence=VisionCombatTracker.hitSequence();return;
         }
-        if(mc.hitResult instanceof EntityHitResult result&&result.getEntity() instanceof LivingEntity living&&living.isAlive()){
-            viewed=living;targetGrace=12;
-        }else if(targetGrace>0)targetGrace--;else viewed=null;
+        LivingEntity target = VisionCombatTracker.crosshairTarget(mc);
+        if (target != null) {
+            viewed = target;
+            targetGrace = 12;
+        } else if (viewedTarget() != null && targetGrace > 0) {
+            targetGrace--;
+        } else {
+            viewed = null;
+        }
         if (hitPulse > 0) hitPulse--;
         // Fire exactly once per client-observed hurt event after our own attack,
         // even when crosshair has moved away by the time the target reacts.
@@ -93,7 +102,7 @@ public final class VisionFeaturePack {
             lastHitSequence = sequence;
             if (ENABLED[6] || ENABLED[7]) hitPulse = 8;
         }
-        if (!ENABLED[6] && !ENABLED[7]) hitPulse = 0;
+        if ((!ENABLED[6] && !ENABLED[7]) || !VisionCombatTracker.hitVisible()) hitPulse = 0;
 
         // Avoid scanning the player-dense world every rendered frame.
         if (++ticks < 10) return;
@@ -104,7 +113,7 @@ public final class VisionFeaturePack {
         double tntDist = Double.MAX_VALUE, arrowDist = Double.MAX_VALUE;
         List<Entity> nearby = mc.level.getEntitiesOfClass(Entity.class,
             mc.player.getBoundingBox().inflate(32.0),
-            e -> e.isAlive() && (e.getType() == EntityType.TNT ||
+            e -> e.isAlive() && !e.isInvisible() && (e.getType() == EntityType.TNT ||
                 e.getType() == EntityType.ARROW || e.getType() == EntityType.SPECTRAL_ARROW));
         for (Entity entity : nearby) {
             double d = entity.distanceToSqr(mc.player);
@@ -143,8 +152,8 @@ public final class VisionFeaturePack {
                 VisionHudTheme.meter(g,b.x()+29,y+12,Math.max(10,b.width()-40),3,value,color);
             }
         }
-        LivingEntity selected=viewed;
-        if(selected!=null&&selected.isAlive()&&(ENABLED[2]||ENABLED[3])){
+        LivingEntity selected=viewedTarget();
+        if(selected!=null&&(ENABLED[2]||ENABLED[3])){
             var b=VisionHudLayout.place(VisionHudLayout.Widget.TARGET,w/2-91,h/2+36,182,60);
             int x=b.x(),y=b.y(),ww=b.width();
             float hp=Math.max(0,selected.getHealth()),max=Math.max(1,selected.getMaxHealth());
@@ -169,7 +178,7 @@ public final class VisionFeaturePack {
         }
         if(ENABLED[4]&&nearestTnt>=0){
             Entity e=mc.level.getEntity(nearestTnt);
-            if(e instanceof PrimedTnt tnt&&e.isAlive()){
+            if(e instanceof PrimedTnt tnt&&tnt.isAlive()&&!tnt.isInvisible()){
                 float fuse=Math.max(0,tnt.getFuse()-mc.getDeltaTracker().getGameTimeDeltaPartialTick(false));
                 int color=fuse<20?0xFFFF788A:0xFFFFC884;
                 var b=VisionHudLayout.place(VisionHudLayout.Widget.TNT,w/2-65,20,130,45);
@@ -182,7 +191,7 @@ public final class VisionFeaturePack {
         }
         if(ENABLED[5]&&nearestArrow>=0){
             Entity e=mc.level.getEntity(nearestArrow);
-            if(e!=null&&e.isAlive()){
+            if(e!=null&&e.isAlive()&&!e.isInvisible()){
                 var camera=mc.gameRenderer.getMainCamera();Vec3 forward=Vec3.directionFromRotation(camera.xRot(),camera.yRot());
                 Vec3 right=forward.cross(new Vec3(0,1,0));
                 if(camera.isInitialized()&&right.lengthSqr()>1e-5){
@@ -202,7 +211,7 @@ public final class VisionFeaturePack {
                 }
             }
         }
-        if(hitPulse>0&&(ENABLED[6]||ENABLED[7])){
+        if(hitPulse>0&&VisionCombatTracker.hitVisible()&&(ENABLED[6]||ENABLED[7])){
             float progress=EffectMath.unit((8-hitPulse+mc.getDeltaTracker().getGameTimeDeltaPartialTick(false))/8f);
             int alpha=(int)(220*EffectMath.fade(progress));
             if(ENABLED[6]){

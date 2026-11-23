@@ -24,6 +24,6 @@ public abstract class VisionPlayerBadgeMixin {
 
     @Inject(method="extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V",at=@At("TAIL"))
     private void visionmod$badge(Avatar player,AvatarRenderState state,float partial,CallbackInfo ci){
-        state.nameTag=VisionPresenceClient.decorate(player.getUUID(),state.nameTag);
+        if (!player.isInvisible()) state.nameTag=VisionPresenceClient.decorate(player.getUUID(),state.nameTag);
     }
 }

@@ -75,7 +75,7 @@ public final class VisionDashboardScreen extends Screen {
     private static List<Module> catalog() {
         List<Module> m = new ArrayList<>();
         visual(m,"FullBright","Мягкий свет в тёмных местах",0);
-        visual(m,"Ore Highlight","Выбор руд и собственных цветов",1);
+        visual(m,"Ore Highlight","Цвета руд и радиус подсветки до 64 блоков",1);
         visual(m,"Clear Water","Прозрачность и видимость под водой",2);
         visual(m,"Clear Lava","Чёткий обзор в лаве",3);
         visual(m,"Player Hearts","Здоровье рядом с ником игрока",4);
@@ -487,15 +487,18 @@ public final class VisionDashboardScreen extends Screen {
         VisionFonts.draw(g,font,"×",left+w-30,top+24,MUTED);
         g.fill(left+24,top+44,left+w-24,top+45,VisionGuiTheme.BORDER);
     }
+    private int oreRowStep(){return Math.min(28,(h-83)/5);}
+    private int oreRadiusTop(){return top+56+5*oreRowStep()-2;}
     private void renderModal(GuiGraphics g,int mx,int my){
         overlay(g,modal==1?"РУДЫ · ПКМ: ЦВЕТ":"НАСТРОЙКИ");
         int gap=10,cw=(w-58)/2;
         if(modal==1){
             for(int i=0;i<ORE_NAMES.length;i++){
-                int x=left+24+(i%2)*(cw+gap),y=top+56+(i/2)*28;
-                button(g,x,y,cw,24,ORE_NAMES[i],OreSelection.enabled(i),mx,my);
+                int x=left+24+(i%2)*(cw+gap),y=top+56+(i/2)*oreRowStep();
+                button(g,x,y,cw,oreRowStep()-4,ORE_NAMES[i],OreSelection.enabled(i),mx,my);
                 g.fill(x+cw-16,y+8,x+cw-8,y+16,OreColors.getColor(i));
             }
+            button(g,left+24,oreRadiusTop(),w-48,20,"Радиус · "+VisionPerformance.oreRadius+" бл.",false,mx,my);
         }else{
             for(int i=0;i<ADVANCED_TOOLS.length;i++)button(g,left+24+(i%2)*(cw+gap),top+56+(i/2)*34,cw,28,ADVANCED_TOOLS[i],false,mx,my);
             if(h>238){
@@ -556,12 +559,13 @@ public final class VisionDashboardScreen extends Screen {
             }else{
                 int cw=(w-58)/2;
                 for(int i=0;i<(modal==1?10:ADVANCED_TOOLS.length);i++){
-                    int x=left+24+(i%2)*(cw+10),y=top+56+(i/2)*(modal==1?28:34);
+                    int x=left+24+(i%2)*(cw+10),y=top+56+(i/2)*(modal==1?oreRowStep():34);
                     if(!inside(mx,my,x,y,cw,modal==1?24:28))continue;
                     if(modal==1){if(b==0)OreSelection.toggle(i);if(b==1)minecraft.setScreen(new OreColorPickerScreen(i));}
                     else if(b==0)openAdvancedTool(i);
                     return true;
                 }
+                if(modal==1&&b==0&&inside(mx,my,left+24,oreRadiusTop(),w-48,20))VisionHotkeys.cyclePerformanceValue(0);
                 if(modal==2&&h>238&&b==0&&inside(mx,my,left+24,top+168,w-48,24))VisionHudLayout.reset();
             }
             return true;

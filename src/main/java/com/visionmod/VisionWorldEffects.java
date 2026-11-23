@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 
@@ -146,7 +145,7 @@ public final class VisionWorldEffects {
             float partial=mc.getDeltaTracker().getGameTimeDeltaPartialTick(false);
             double time=mc.level.getGameTime()+partial;
             int steps=VisionAppearance.segments();
-            LivingEntity target=ENABLED[0]&&mc.hitResult instanceof EntityHitResult hit&&hit.getEntity() instanceof LivingEntity living&&living.isAlive()?living:null;
+            LivingEntity target=ENABLED[0]?VisionCombatTracker.crosshairTarget(mc):null;
             try{
                 // Finish every translucent vertex before acquiring the line consumer.
                 VertexConsumer fill=ctx.consumers().getBuffer(RenderTypes.entityTranslucent(VisionGeometry.WHITE_TEXTURE));

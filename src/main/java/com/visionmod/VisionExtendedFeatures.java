@@ -66,7 +66,7 @@ public final class VisionExtendedFeatures {
     private static String lastTarget = "";
     private static String lyric = "";
     private static final LinkedHashMap<String, String> friends = new LinkedHashMap<>();
-    private static List<String> friendRows = List.of();
+    private static List<NearbyPlayer> friendRows = List.of();
     private static int soundPreset;
     public static String soundLabel(){return switch(soundPreset){case 1->"AMETHYST";case 2->"CHIME";default->"SOFT";};}
     public static int soundPreset(){return soundPreset;}
@@ -145,18 +145,20 @@ public final class VisionExtendedFeatures {
         save();
     }
 
-    record NearbyPlayer(String name, double distanceSquared) {
+    record NearbyPlayer(Player player, double distanceSquared) {
+        boolean visible() { return player.isAlive() && !player.isInvisible(); }
+        String name() { return player.getGameProfile().name(); }
         int distance() { return (int) Math.round(Math.sqrt(distanceSquared)); }
     }
     static List<NearbyPlayer> nearbyPlayers(Minecraft mc) {
         if (mc.level == null || mc.player == null) return List.of();
         List<NearbyPlayer> nearby = new ArrayList<>();
         for (Player other : mc.level.players()) {
-            if (other == mc.player || other.isRemoved() || other.getUUID().equals(mc.player.getUUID())) continue;
+            if (other == mc.player || !other.isAlive() || other.isInvisible() || other.getUUID().equals(mc.player.getUUID())) continue;
             double distance = other.distanceToSqr(mc.player);
             String name = other.getGameProfile().name();
             if (Double.isFinite(distance) && distance <= FRIEND_RADIUS * FRIEND_RADIUS && validFriendName(name)) {
-                nearby.add(new NearbyPlayer(name, distance));
+                nearby.add(new NearbyPlayer(other, distance));
             }
         }
         nearby.sort(Comparator.comparingDouble(NearbyPlayer::distanceSquared).thenComparing(NearbyPlayer::name));
@@ -231,12 +233,13 @@ public final class VisionExtendedFeatures {
             lastShownDeathSequence = VisionCombatTracker.deathSequence();
             return;
         }
-        if (notificationTicks > 0) notificationTicks--;
+        if (!VisionCombatTracker.deathVisible()) notificationTicks = 0;
+        else if (notificationTicks > 0) notificationTicks--;
 
         int hitEvent = VisionCombatTracker.hitSequence();
         if (hitEvent != lastPlayedHitSequence) {
             lastPlayedHitSequence = hitEvent;
-            if (FLAGS[6]) {
+            if (FLAGS[6] && VisionCombatTracker.hitVisible()) {
                 if(soundPreset==1)mc.player.playSound(SoundEvents.AMETHYST_BLOCK_CHIME,.28F,1.2F);
                 else if(soundPreset==2)mc.player.playSound(SoundEvents.NOTE_BLOCK_CHIME.value(),.25F,1.5F);
                 else mc.player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP,.20F,1.55F);
@@ -245,7 +248,7 @@ public final class VisionExtendedFeatures {
         int deathEvent = VisionCombatTracker.deathSequence();
         if (deathEvent != lastShownDeathSequence) {
             lastShownDeathSequence = deathEvent;
-            if (FLAGS[1]) {
+            if (FLAGS[1] && VisionCombatTracker.deathVisible()) {
                 notificationTicks = 28;
                 lastTarget = VisionCombatTracker.deathName();
             }
@@ -254,8 +257,7 @@ public final class VisionExtendedFeatures {
         if (++ticks >= 20) {
             ticks = 0;
             friendRows = FLAGS[5] && !friends.isEmpty()
-                ? nearbyPlayers(mc).stream().filter(player -> isFriend(player.name())).limit(6)
-                    .map(player -> player.name() + "  ·  " + player.distance() + " м").toList()
+                ? nearbyPlayers(mc).stream().filter(player -> isFriend(player.name())).limit(6).toList()
                 : List.of();
         }
     }
@@ -281,7 +283,7 @@ public final class VisionExtendedFeatures {
             };
             g.fillGradient(0,0,w,h,top,bottom);
         }
-        if(FLAGS[1]&&notificationTicks>0){
+        if(FLAGS[1]&&notificationTicks>0&&VisionCombatTracker.deathVisible()){
             float progress=1-notificationTicks/28f;
             int alpha=(int)(255*Math.min(1,notificationTicks/8f));
             int width=Math.min(w-24,Math.max(166,mc.font.width(lastTarget)+32));
@@ -292,12 +294,16 @@ public final class VisionExtendedFeatures {
             VisionHudTheme.text(g,mc.font,lastTarget,box.x()+12,box.y()+24,box.width()-24,VisionGeometry.withAlpha(VisionMenuTheme.WHITE,alpha));
         }
         if(FLAGS[5]){
-            boolean empty=friendRows.isEmpty();
-            int height=empty?22:30+friendRows.size()*14,width=empty?118:156;
+            var visibleFriends=friendRows.stream().filter(NearbyPlayer::visible).toList();
+            boolean empty=visibleFriends.isEmpty();
+            int height=empty?22:30+visibleFriends.size()*14,width=empty?118:156;
             var box=VisionHudLayout.place(VisionHudLayout.Widget.SOCIAL,w-width-12,h-height-18,width,height);
             VisionHudTheme.panel(g,box.x(),box.y(),box.width(),box.height(),0xFF96E2C2);
             g.drawString(mc.font,empty?"ДРУЗЬЯ · 0":"ДРУЗЬЯ РЯДОМ",box.x()+10,box.y()+(empty?7:9),0xFF96E2C2);
-            for(int i=0;i<friendRows.size();i++)VisionHudTheme.text(g,mc.font,friendRows.get(i),box.x()+10,box.y()+27+i*14,box.width()-20,VisionMenuTheme.WHITE);
+            for(int i=0;i<visibleFriends.size();i++){
+                NearbyPlayer friend=visibleFriends.get(i);
+                VisionHudTheme.text(g,mc.font,friend.name()+"  ·  "+friend.distance()+" м",box.x()+10,box.y()+27+i*14,box.width()-20,VisionMenuTheme.WHITE);
+            }
         }
     }
 

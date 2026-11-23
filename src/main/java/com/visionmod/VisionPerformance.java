@@ -12,6 +12,7 @@ import java.util.Properties;
 /** CPU budgets for Vision Mod effects. The separately enabled render booster changes Minecraft video options. */
 public final class VisionPerformance {
     private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("visionmod/performance.properties");
+    static final int[] ORE_RADII = {4, 6, 8, 12, 16, 24, 32, 48, 64};
     public static int oreRadius = 6;
     public static int checksPerTick = 80;
     public static int outlineLimit = 48;
@@ -48,7 +49,6 @@ public final class VisionPerformance {
     public static int loadedPlayers() { return nearbyPlayers; }
     public static int estimatedFps() { return (int)Math.round(1000.0 / Math.max(1, frameTimeMillis)); }
     public static boolean busy() { return adaptive && (nearbyPlayers >= busyPlayerThreshold || frameTimeMillis >= 40.0); }
-    public static int effectiveOreRadius() { return busy() ? Math.max(4, oreRadius / 2) : oreRadius; }
     public static int effectiveChecksPerTick() { return busy() ? Math.max(24, checksPerTick / (frameTimeMillis > 50 ? 4 : 2)) : checksPerTick; }
     public static int effectiveOutlineLimit() { return busy() ? Math.max(16, outlineLimit / 2) : outlineLimit; }
     public static boolean drawHearts() { return !busy() || !limitHudOnBusySpawn; }
@@ -61,7 +61,7 @@ public final class VisionPerformance {
         Properties p = new Properties();
         try (InputStream in = Files.newInputStream(FILE)) {
             p.load(in);
-            oreRadius = choice(number(p,"oreRadius",6),new int[]{4,6,8,12,16},6);
+            oreRadius = choice(number(p,"oreRadius",6),ORE_RADII,6);
             checksPerTick = choice(number(p,"checksPerTick",80),new int[]{40,80,160,320},80);
             outlineLimit = choice(number(p,"outlineLimit",48),new int[]{32,48,96,160,240},48);
             busyPlayerThreshold = choice(number(p,"busyPlayerThreshold",16),new int[]{8,12,16,24,32},16);

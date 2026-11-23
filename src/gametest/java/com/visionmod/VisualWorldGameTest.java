@@ -74,6 +74,8 @@ public final class VisualWorldGameTest implements FabricClientGameTest {
             VisionNameTagGameTest.run(context);
             VisionItemPhysicsGameTest.run(context,world);
             VisionFriendZoneGameTest.run(context);
+            VisionInvisibilityGameTest.run(context,world);
+            VisionOreHighlightGameTest.run(context,world);
             context.setScreen(VisionMenuSession::dashboard);
             context.waitTicks(3);capture(context,"05-dashboard-in-world");
             context.setScreen(()->null);

@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.EntityHitResult;
 
 /**
  * Lightweight client-side observation of *our own* entity attack.
@@ -22,17 +22,24 @@ public final class VisionCombatTracker {
     private static int ticksLeft;
     private static boolean sawHurt;
     private static int hitSequence;
-    private static Vec3 lastHitPos;
+    private static ClientLevel eventLevel;
+    private static LivingEntity lastHitTarget;
+    private static LivingEntity lastDeathTarget;
     private static int deathSequence;
     private static String deathName = "";
 
     private VisionCombatTracker() { }
 
+    static LivingEntity crosshairTarget(Minecraft mc) {
+        return mc.hitResult instanceof EntityHitResult hit && hit.getEntity() instanceof LivingEntity living
+            && living.isAlive() && !living.isInvisible() ? living : null;
+    }
+
     public static void init() {
         AttackEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
             Minecraft mc = Minecraft.getInstance();
             if (VisionModClient.enabled && level.isClientSide() && mc.player == player &&
-                    entity instanceof LivingEntity living && living.isAlive()) {
+                    entity instanceof LivingEntity living && living.isAlive() && !living.isInvisible()) {
                 target = living;
                 targetLevel = mc.level;
                 ticksLeft = 60;
@@ -44,19 +51,24 @@ public final class VisionCombatTracker {
     }
 
     private static void tick(Minecraft mc) {
+        if (eventLevel != mc.level) {
+            eventLevel = mc.level;
+            lastHitTarget = lastDeathTarget = null;
+        }
         if (!VisionModClient.enabled || mc.player == null || mc.level == null ||
-                target == null || targetLevel != mc.level || ticksLeft-- <= 0) {
+                target == null || target.isInvisible() || targetLevel != mc.level || ticksLeft-- <= 0) {
             clear();
             return;
         }
         // The real entity hurt animation is the signal, not "still aiming at it".
         if (target.hurtTime > 0 && !sawHurt) {
             sawHurt = true;
-            lastHitPos = target.getBoundingBox().getCenter();
+            lastHitTarget = target;
             hitSequence++;
         }
         if (target.isDeadOrDying()) {
             if (sawHurt) {
+                lastDeathTarget = target;
                 deathName = target.getName().getString();
                 deathSequence++;
             }
@@ -72,7 +84,8 @@ public final class VisionCombatTracker {
     }
 
     public static int hitSequence() { return hitSequence; }
-    public static Vec3 hitPosition() { return lastHitPos; }
+    static boolean hitVisible() { return lastHitTarget != null && !lastHitTarget.isInvisible(); }
+    static boolean deathVisible() { return lastDeathTarget != null && !lastDeathTarget.isInvisible(); }
     public static int deathSequence() { return deathSequence; }
     public static String deathName() { return deathName; }
 }

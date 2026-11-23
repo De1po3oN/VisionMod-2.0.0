@@ -27,6 +27,12 @@ final class VisionFriendZoneGameTest {
                 var nearby = VisionExtendedFeatures.nearbyPlayers(mc);
                 check(nearby.size() == 1 && nearby.getFirst().name().equals("NearbyFriend") && nearby.getFirst().distance() == 6,
                     "Nearby list must contain only other players within 48 blocks");
+                var row = nearby.getFirst();
+                row.player().setInvisible(true);
+                check(!row.visible() && VisionExtendedFeatures.nearbyPlayers(mc).isEmpty(),
+                    "Friend Zone exposed an invisible player from a new or cached row");
+                row.player().setInvisible(false);
+                check(row.visible(), "A visible player could not return to Friend Zone");
             });
             context.setScreen(VisionDashboardScreen::new);
             context.waitTicks(2);

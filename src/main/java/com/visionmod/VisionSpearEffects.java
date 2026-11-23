@@ -6,12 +6,15 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import java.util.ArrayDeque;
 
 /** Bounded world geometry for actual spear actions, with ordinary terrain depth testing. */
 public final class VisionSpearEffects {
-    private record Burst(Vec3 origin, Vec3 direction, long born, boolean pierce) { }
+    private record Burst(Vec3 origin, Vec3 direction, long born, Entity target) {
+        boolean pierce() { return target != null; }
+    }
     private static final ArrayDeque<Burst> BURSTS = new ArrayDeque<>();
     private static ClientLevel level;
     private static long renderedFrames;
@@ -22,12 +25,13 @@ public final class VisionSpearEffects {
     static long renderedFrames() { return renderedFrames; }
     static long lungeEvents() { return lunges; }
     static long pierceEvents() { return pierces; }
-    public static void emit(Vec3 point, Vec3 direction, boolean pierce) {
+    static void emit(Vec3 point, Vec3 direction, Entity target) {
+        boolean pierce = target != null;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || !VisionMotionEffects.enabled(pierce ? 3 : 2) || direction.lengthSqr() < 1e-6) return;
         if (level != mc.level) { reset(); level = mc.level; }
         if (BURSTS.size() >= 16) BURSTS.removeFirst();
-        BURSTS.addLast(new Burst(point, direction.normalize(), System.nanoTime(), pierce));
+        BURSTS.addLast(new Burst(point, direction.normalize(), System.nanoTime(), target));
         if (pierce) pierces++; else lunges++;
     }
     public static void init() {
@@ -35,7 +39,7 @@ public final class VisionSpearEffects {
             Minecraft mc = Minecraft.getInstance();
             if (!VisionModClient.enabled || mc.level == null || mc.player == null || level != mc.level) { reset(); return; }
             long now = System.nanoTime();
-            BURSTS.removeIf(b -> !VisionMotionEffects.enabled(b.pierce ? 3 : 2) || now - b.born > VisionMotionEffects.spearDuration() * 1_000_000L);
+            BURSTS.removeIf(b -> (b.target != null && b.target.isInvisible()) || !VisionMotionEffects.enabled(b.pierce() ? 3 : 2) || now - b.born > VisionMotionEffects.spearDuration() * 1_000_000L);
             if (BURSTS.isEmpty() || ctx.matrices() == null || ctx.consumers() == null) return;
             PoseStack pose = ctx.matrices();
             Vec3 camera = mc.gameRenderer.getMainCamera().position();
@@ -54,7 +58,7 @@ public final class VisionSpearEffects {
         Vec3 side = b.direction.cross(new Vec3(0, 1, 0));
         if (side.lengthSqr() < .001) side = new Vec3(1, 0, 0); else side = side.normalize();
         Vec3 up = side.cross(b.direction).normalize();
-        if (b.pierce) {
+        if (b.pierce()) {
             Vec3 start = b.origin.subtract(b.direction.scale(.8 * size));
             Vec3 end = b.origin.add(b.direction.scale((1.4 + age * .35) * size));
             strip(out, pose, start, end, side.scale(.045 * size * (1 - age)), color);
@@ -67,7 +71,7 @@ public final class VisionSpearEffects {
                 strip(out, pose, start, end, up.scale(.035 * size * (1 - age)), color);
             }
         }
-        double radius = (.14 + Math.sqrt(age) * (b.pierce ? .65 : .9)) * size;
+        double radius = (.14 + Math.sqrt(age) * (b.pierce() ? .65 : .9)) * size;
         for (int i = 0; i < 32; i++) {
             double a = i * Math.PI / 16, c = (i + 1) * Math.PI / 16;
             Vec3 p = b.origin.add(side.scale(Math.cos(a) * radius)).add(up.scale(Math.sin(a) * radius));

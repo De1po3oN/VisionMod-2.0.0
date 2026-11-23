@@ -46,7 +46,10 @@ public abstract class PlayerHeartsMixin {
     ) {
         // On busy spawn locations this runs once for every player render.
         // Avoid allocating even the two-float array when the feature is off.
-        if (!VisionModClient.isHeartsEnabled()) return;
+        if (!VisionModClient.isHeartsEnabled() || player.isInvisible()) {
+            visionmod$health.remove(state);
+            return;
+        }
         float[] values = visionmod$health.get(state);
         if (values == null) {
             values = new float[2];

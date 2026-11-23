@@ -211,7 +211,7 @@ public final class VisionProfiles {
             validatedOres[i] = ores.get(i).getAsBoolean();
         }
         // Accept optional 0.7.0 numeric fields only if they match UI-supported values.
-        int radius = optionalChoice(data, "performanceRadius", VisionPerformance.oreRadius, 4, 6, 8, 12, 16);
+        int radius = optionalChoice(data, "performanceRadius", VisionPerformance.oreRadius, VisionPerformance.ORE_RADII);
         int budget = optionalChoice(data, "performanceBudget", VisionPerformance.checksPerTick, 40, 80, 160, 320);
         int outlines = optionalChoice(data, "performanceOutlines", VisionPerformance.outlineLimit, 32, 48, 96, 160, 240);
         // Profiles made by older releases omit extras and remain supported.

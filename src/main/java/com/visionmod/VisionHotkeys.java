@@ -250,7 +250,7 @@ public final class VisionHotkeys {
 
     public static void cyclePerformanceValue(int index) {
         switch (index) {
-            case 0 -> VisionPerformance.oreRadius = next(VisionPerformance.oreRadius, 4,6,8,12,16);
+            case 0 -> VisionPerformance.oreRadius = next(VisionPerformance.oreRadius, VisionPerformance.ORE_RADII);
             case 1 -> VisionPerformance.checksPerTick = next(VisionPerformance.checksPerTick, 40,80,160,320);
             case 2 -> VisionPerformance.outlineLimit = next(VisionPerformance.outlineLimit, 32,48,96,160,240);
             case 3 -> VisionRenderBoost.cycleTargetFps();

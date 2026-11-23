@@ -88,7 +88,7 @@ public final class VisionMotionEffects {
             mc.player.getMainHandItem().has(DataComponents.PIERCING_WEAPON);
         var impulse=LUNGE.sample(eligible?mc.player.getX():0,eligible?mc.player.getZ():0,eligible);
         if(impulse!=null) {
-            VisionSpearEffects.emit(mc.player.position().add(0,.9,0),new Vec3(impulse.x(),0,impulse.z()),false);
+            VisionSpearEffects.emit(mc.player.position().add(0,.9,0),new Vec3(impulse.x(),0,impulse.z()),null);
         }
     }
     /** Server damage attribution also covers the spear's held-use charge attack. */
@@ -100,9 +100,9 @@ public final class VisionMotionEffects {
             mc.player.getUseItem():mc.player.getMainHandItem();
         if(!stack.has(DataComponents.PIERCING_WEAPON))return;
         var target=mc.level.getEntity(packet.entityId());
-        if(target==null||target==mc.player||target.distanceToSqr(mc.player)>100)return;
+        if(target==null||target==mc.player||target.isInvisible()||target.distanceToSqr(mc.player)>100)return;
         Vec3 contact=target.getBoundingBox().getCenter();
-        VisionSpearEffects.emit(contact,contact.subtract(mc.player.getEyePosition()),true);
+        VisionSpearEffects.emit(contact,contact.subtract(mc.player.getEyePosition()),target);
     }
     private static void tick(Minecraft mc) {
         if (mc.player == null || mc.level == null || !VisionModClient.enabled) {
