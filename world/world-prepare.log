@@ -12,488 +12,57 @@ Note: Recompile with -Xlint:deprecation for details.
 
 > Task :processResources
 > Task :classes
-> Task :compileGametestJava
-> Task :processGametestResources
-> Task :gametestClasses
 
-> Task :inspectMinecraftHooks
-[SPEAR_API] net/minecraft/world/entity/player/Player.lungeForwardMaybe()V
-  call net/minecraft/world/entity/player/Player.hasEnoughFoodToDoExhaustiveManoeuvres()Z
-  branch 153
-  call net/minecraft/world/entity/Avatar.lungeForwardMaybe()V
-[SPEAR_API] net/minecraft/client/multiplayer/MultiPlayerGameMode.piercingAttack(Lnet/minecraft/world/item/component/PiercingWeapon;)V
-  call net/minecraft/client/multiplayer/MultiPlayerGameMode.ensureHasSentCarriedItem()V
-  field net/minecraft/client/multiplayer/MultiPlayerGameMode.connection Lnet/minecraft/client/multiplayer/ClientPacketListener;
-  field net/minecraft/network/protocol/game/ServerboundPlayerActionPacket$Action.STAB Lnet/minecraft/network/protocol/game/ServerboundPlayerActionPacket$Action;
-  field net/minecraft/core/BlockPos.ZERO Lnet/minecraft/core/BlockPos;
-  field net/minecraft/core/Direction.DOWN Lnet/minecraft/core/Direction;
-  call net/minecraft/network/protocol/game/ServerboundPlayerActionPacket.<init>(Lnet/minecraft/network/protocol/game/ServerboundPlayerActionPacket$Action;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)V
-  call net/minecraft/client/multiplayer/ClientPacketListener.send(Lnet/minecraft/network/protocol/Packet;)V
-  field net/minecraft/client/multiplayer/MultiPlayerGameMode.minecraft Lnet/minecraft/client/Minecraft;
-  field net/minecraft/client/Minecraft.player Lnet/minecraft/client/player/LocalPlayer;
-  call net/minecraft/client/player/LocalPlayer.onAttack()V
-  field net/minecraft/client/multiplayer/MultiPlayerGameMode.minecraft Lnet/minecraft/client/Minecraft;
-  field net/minecraft/client/Minecraft.player Lnet/minecraft/client/player/LocalPlayer;
-  call net/minecraft/client/player/LocalPlayer.lungeForwardMaybe()V
-  field net/minecraft/client/multiplayer/MultiPlayerGameMode.minecraft Lnet/minecraft/client/Minecraft;
-  field net/minecraft/client/Minecraft.player Lnet/minecraft/client/player/LocalPlayer;
-  call net/minecraft/world/item/component/PiercingWeapon.makeSound(Lnet/minecraft/world/entity/Entity;)V
-[SPEAR_API] net/minecraft/client/multiplayer/ClientPacketListener.handleSetEntityMotion(Lnet/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket;)V
-  field net/minecraft/client/multiplayer/ClientPacketListener.minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/Minecraft.packetProcessor()Lnet/minecraft/network/PacketProcessor;
-  call net/minecraft/network/protocol/PacketUtils.ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/network/PacketProcessor;)V
-  field net/minecraft/client/multiplayer/ClientPacketListener.level Lnet/minecraft/client/multiplayer/ClientLevel;
-  call net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.getId()I
-  call net/minecraft/client/multiplayer/ClientLevel.getEntity(I)Lnet/minecraft/world/entity/Entity;
-  branch 199
-  call net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.getMovement()Lnet/minecraft/world/phys/Vec3;
-  call net/minecraft/world/entity/Entity.lerpMotion(Lnet/minecraft/world/phys/Vec3;)V
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.<init>(Lnet/minecraft/world/entity/Entity;)V
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.<init>(ILnet/minecraft/world/phys/Vec3;)V
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.<init>(Lnet/minecraft/network/FriendlyByteBuf;)V
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.write(Lnet/minecraft/network/FriendlyByteBuf;)V
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.type()Lnet/minecraft/network/protocol/PacketType;
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.handle(Lnet/minecraft/network/protocol/game/ClientGamePacketListener;)V
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.getId()I
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.getMovement()Lnet/minecraft/world/phys/Vec3;
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.handle(Lnet/minecraft/network/PacketListener;)V
-[SPEAR_API] net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket.<clinit>()V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.createItemCooldowns()Lnet/minecraft/world/item/ItemCooldowns;
-[REFERENCE_API] net/minecraft/world/entity/player/Player.startAutoSpinAttack(IFLnet/minecraft/world/item/ItemStack;)V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.getWeaponItem()Lnet/minecraft/world/item/ItemStack;
-[REFERENCE_API] net/minecraft/world/entity/player/Player.destroyVanishingCursedItems()V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.handleCreativeModeItemDrop(Lnet/minecraft/world/item/ItemStack;)V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.blockUsingItem(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.openItemGui(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/InteractionHand;)V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.attack(Lnet/minecraft/world/entity/Entity;)V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.createAttackSource(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/damagesource/DamageSource;
-[REFERENCE_API] net/minecraft/world/entity/player/Player.cannotAttack(Lnet/minecraft/world/entity/Entity;)Z
-[REFERENCE_API] net/minecraft/world/entity/player/Player.canCriticalAttack(Lnet/minecraft/world/entity/Entity;)Z
-[REFERENCE_API] net/minecraft/world/entity/player/Player.isSweepAttack(ZZZ)Z
-[REFERENCE_API] net/minecraft/world/entity/player/Player.attackVisualEffects(Lnet/minecraft/world/entity/Entity;ZZZZF)V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.itemAttackInteraction(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/damagesource/DamageSource;Z)V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.doSweepAttack(Lnet/minecraft/world/entity/Entity;FLnet/minecraft/world/damagesource/DamageSource;F)V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.doAutoAttackOnTouch(Lnet/minecraft/world/entity/LivingEntity;)V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.stabAttack(Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/entity/Entity;FZZZ)Z
-[REFERENCE_API] net/minecraft/world/entity/player/Player.hasInfiniteMaterials()Z
-[REFERENCE_API] net/minecraft/world/entity/player/Player.canDropItems()Z
-[REFERENCE_API] net/minecraft/world/entity/player/Player.lungeForwardMaybe()V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.mayUseItemAt(Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/minecraft/world/item/ItemStack;)Z
-[REFERENCE_API] net/minecraft/world/entity/player/Player.addItem(Lnet/minecraft/world/item/ItemStack;)Z
-[REFERENCE_API] net/minecraft/world/entity/player/Player.getCurrentItemAttackStrengthDelay()F
-[REFERENCE_API] net/minecraft/world/entity/player/Player.cannotAttackWithItem(Lnet/minecraft/world/item/ItemStack;I)Z
-[REFERENCE_API] net/minecraft/world/entity/player/Player.getAttackStrengthScale(F)F
-[REFERENCE_API] net/minecraft/world/entity/player/Player.getItemSwapScale(F)F
-[REFERENCE_API] net/minecraft/world/entity/player/Player.resetAttackStrengthTicker()V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.onAttack()V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.resetOnlyAttackStrengthTicker()V
-[REFERENCE_API] net/minecraft/world/entity/player/Player.isWithinAttackRange(Lnet/minecraft/world/phys/AABB;D)Z
-[REFERENCE_API] net/minecraft/client/multiplayer/ClientPacketListener.handleDamageEvent(Lnet/minecraft/network/protocol/game/ClientboundDamageEventPacket;)V
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.<init>(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;)V
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.<init>(Lnet/minecraft/network/RegistryFriendlyByteBuf;)V
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.<init>(ILnet/minecraft/core/Holder;IILjava/util/Optional;)V
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.writeOptionalEntityId(Lnet/minecraft/network/FriendlyByteBuf;I)V
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.readOptionalEntityId(Lnet/minecraft/network/FriendlyByteBuf;)I
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.write(Lnet/minecraft/network/RegistryFriendlyByteBuf;)V
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.type()Lnet/minecraft/network/protocol/PacketType;
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.handle(Lnet/minecraft/network/protocol/game/ClientGamePacketListener;)V
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.getSource(Lnet/minecraft/world/level/Level;)Lnet/minecraft/world/damagesource/DamageSource;
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.toString()Ljava/lang/String;
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.hashCode()I
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.equals(Ljava/lang/Object;)Z
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.entityId()I
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.sourceType()Lnet/minecraft/core/Holder;
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.sourceCauseId()I
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.sourceDirectId()I
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.sourcePosition()Ljava/util/Optional;
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.handle(Lnet/minecraft/network/PacketListener;)V
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.method_49073(Lnet/minecraft/network/FriendlyByteBuf;Lnet/minecraft/world/phys/Vec3;)V
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.method_49076(Lnet/minecraft/network/FriendlyByteBuf;)Lnet/minecraft/world/phys/Vec3;
-[REFERENCE_API] net/minecraft/network/protocol/game/ClientboundDamageEventPacket.<clinit>()V
-[REFERENCE_API] net/minecraft/network/chat/Style.getFont()Lnet/minecraft/network/chat/FontDescription;
-[REFERENCE_API] net/minecraft/network/chat/Style.withFont(Lnet/minecraft/network/chat/FontDescription;)Lnet/minecraft/network/chat/Style;
-[REFERENCE_API] net/minecraft/network/chat/FontDescription.CODEC Lcom/mojang/serialization/Codec;
-[REFERENCE_API] net/minecraft/network/chat/FontDescription.DEFAULT Lnet/minecraft/network/chat/FontDescription$Resource;
-[REFERENCE_API] net/minecraft/network/chat/FontDescription.method_73172(Lnet/minecraft/network/chat/FontDescription;)Lcom/mojang/serialization/DataResult;
-[REFERENCE_API] net/minecraft/network/chat/FontDescription.method_73173(Lnet/minecraft/network/chat/FontDescription;)Ljava/lang/String;
-[REFERENCE_API] net/minecraft/network/chat/FontDescription.<clinit>()V
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ENCODER_CACHE Lnet/minecraft/util/EncoderCache;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CUSTOM_DATA Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.MAX_STACK_SIZE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.MAX_DAMAGE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.DAMAGE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.UNBREAKABLE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.USE_EFFECTS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CUSTOM_NAME Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.MINIMUM_ATTACK_CHARGE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.DAMAGE_TYPE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ITEM_NAME Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ITEM_MODEL Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.LORE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.RARITY Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ENCHANTMENTS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CAN_PLACE_ON Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CAN_BREAK Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ATTRIBUTE_MODIFIERS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CUSTOM_MODEL_DATA Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.TOOLTIP_DISPLAY Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.REPAIR_COST Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CREATIVE_SLOT_LOCK Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ENCHANTMENT_GLINT_OVERRIDE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.INTANGIBLE_PROJECTILE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.FOOD Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CONSUMABLE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.USE_REMAINDER Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.USE_COOLDOWN Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.DAMAGE_RESISTANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.TOOL Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.WEAPON Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ATTACK_RANGE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ENCHANTABLE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.EQUIPPABLE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.REPAIRABLE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.GLIDER Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.TOOLTIP_STYLE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.DEATH_PROTECTION Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.BLOCKS_ATTACKS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.PIERCING_WEAPON Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.KINETIC_WEAPON Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.SWING_ANIMATION Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.STORED_ENCHANTMENTS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.DYED_COLOR Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.MAP_COLOR Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.MAP_ID Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.MAP_DECORATIONS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.MAP_POST_PROCESSING Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CHARGED_PROJECTILES Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.BUNDLE_CONTENTS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.POTION_CONTENTS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.POTION_DURATION_SCALE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.SUSPICIOUS_STEW_EFFECTS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.WRITABLE_BOOK_CONTENT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.WRITTEN_BOOK_CONTENT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.TRIM Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.DEBUG_STICK_STATE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ENTITY_DATA Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.BUCKET_ENTITY_DATA Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.BLOCK_ENTITY_DATA Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.INSTRUMENT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.PROVIDES_TRIM_MATERIAL Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.OMINOUS_BOTTLE_AMPLIFIER Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.JUKEBOX_PLAYABLE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.PROVIDES_BANNER_PATTERNS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.RECIPES Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.LODESTONE_TRACKER Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.FIREWORK_EXPLOSION Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.FIREWORKS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.PROFILE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.NOTE_BLOCK_SOUND Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.BANNER_PATTERNS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.BASE_COLOR Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.POT_DECORATIONS Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CONTAINER Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.BLOCK_STATE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.BEES Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.LOCK Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CONTAINER_LOOT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.BREAK_SOUND Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.VILLAGER_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.WOLF_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.WOLF_SOUND_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.WOLF_COLLAR Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.FOX_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.SALMON_SIZE Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.PARROT_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.TROPICAL_FISH_PATTERN Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.TROPICAL_FISH_BASE_COLOR Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.TROPICAL_FISH_PATTERN_COLOR Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.MOOSHROOM_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.RABBIT_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.PIG_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.COW_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CHICKEN_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.ZOMBIE_NAUTILUS_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.FROG_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.HORSE_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.PAINTING_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.LLAMA_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.AXOLOTL_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CAT_VARIANT Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.CAT_COLLAR Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.SHEEP_COLOR Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.SHULKER_COLOR Lnet/minecraft/core/component/DataComponentType;
-[REFERENCE_API] net/minecraft/core/component/DataComponents.COMMON_ITEM_COMPONENTS Lnet/minecraft/core/component/DataComponentMap;
-[TEXT_HOOKS] net/minecraft/client/gui/Font.drawInBatch(Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)V
-  call net/minecraft/client/gui/Font.prepareText(Ljava/lang/String;FFIZI)Lnet/minecraft/client/gui/Font$PreparedText;
-  call net/minecraft/client/gui/Font$GlyphVisitor.forMultiBufferSource(Lnet/minecraft/client/renderer/MultiBufferSource;Lorg/joml/Matrix4f;Lnet/minecraft/client/gui/Font$DisplayMode;I)Lnet/minecraft/client/gui/Font$GlyphVisitor;
-  call net/minecraft/client/gui/Font$PreparedText.visit(Lnet/minecraft/client/gui/Font$GlyphVisitor;)V
-[TEXT_HOOKS] net/minecraft/client/gui/Font.drawInBatch(Lnet/minecraft/network/chat/Component;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)V
-  call net/minecraft/network/chat/Component.getVisualOrderText()Lnet/minecraft/util/FormattedCharSequence;
-  call net/minecraft/client/gui/Font.prepareText(Lnet/minecraft/util/FormattedCharSequence;FFIZZI)Lnet/minecraft/client/gui/Font$PreparedText;
-  call net/minecraft/client/gui/Font$GlyphVisitor.forMultiBufferSource(Lnet/minecraft/client/renderer/MultiBufferSource;Lorg/joml/Matrix4f;Lnet/minecraft/client/gui/Font$DisplayMode;I)Lnet/minecraft/client/gui/Font$GlyphVisitor;
-  call net/minecraft/client/gui/Font$PreparedText.visit(Lnet/minecraft/client/gui/Font$GlyphVisitor;)V
-[TEXT_HOOKS] net/minecraft/client/gui/Font.drawInBatch(Lnet/minecraft/util/FormattedCharSequence;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)V
-  call net/minecraft/client/gui/Font.prepareText(Lnet/minecraft/util/FormattedCharSequence;FFIZZI)Lnet/minecraft/client/gui/Font$PreparedText;
-  call net/minecraft/client/gui/Font$GlyphVisitor.forMultiBufferSource(Lnet/minecraft/client/renderer/MultiBufferSource;Lorg/joml/Matrix4f;Lnet/minecraft/client/gui/Font$DisplayMode;I)Lnet/minecraft/client/gui/Font$GlyphVisitor;
-  call net/minecraft/client/gui/Font$PreparedText.visit(Lnet/minecraft/client/gui/Font$GlyphVisitor;)V
-[TEXT_HOOKS] net/minecraft/client/Camera.setRotation(FF)V
-  field net/minecraft/client/Camera.xRot F
-  field net/minecraft/client/Camera.yRot F
-  field net/minecraft/client/Camera.rotation Lorg/joml/Quaternionf;
-  constant 3.1415927
-  constant 0.017453292
-  constant 0.017453292
-  call org/joml/Quaternionf.rotationYXZ(FFF)Lorg/joml/Quaternionf;
-  field net/minecraft/client/Camera.FORWARDS Lorg/joml/Vector3f;
-  field net/minecraft/client/Camera.rotation Lorg/joml/Quaternionf;
-  field net/minecraft/client/Camera.forwards Lorg/joml/Vector3f;
-  call org/joml/Vector3f.rotate(Lorg/joml/Quaternionfc;Lorg/joml/Vector3f;)Lorg/joml/Vector3f;
-  field net/minecraft/client/Camera.UP Lorg/joml/Vector3f;
-  field net/minecraft/client/Camera.rotation Lorg/joml/Quaternionf;
-  field net/minecraft/client/Camera.up Lorg/joml/Vector3f;
-  call org/joml/Vector3f.rotate(Lorg/joml/Quaternionfc;Lorg/joml/Vector3f;)Lorg/joml/Vector3f;
-  field net/minecraft/client/Camera.LEFT Lorg/joml/Vector3f;
-  field net/minecraft/client/Camera.rotation Lorg/joml/Quaternionf;
-  field net/minecraft/client/Camera.left Lorg/joml/Vector3f;
-  call org/joml/Vector3f.rotate(Lorg/joml/Quaternionfc;Lorg/joml/Vector3f;)Lorg/joml/Vector3f;
-[TEXT_HOOKS] net/minecraft/client/renderer/SubmitNodeCollector.order(I)Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;
-[HOOKS] net/minecraft/client/Camera.setup(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;ZZF)V
-  field initialized Z
-  field level Lnet/minecraft/world/level/Level;
-  field entity Lnet/minecraft/world/entity/Entity;
-  field detached Z
-  field partialTickTime F
-  call net/minecraft/world/entity/Entity.isPassenger()Z
-  call net/minecraft/world/entity/Entity.getVehicle()Lnet/minecraft/world/entity/Entity;
-  call net/minecraft/world/entity/vehicle/minecart/Minecart.getBehavior()Lnet/minecraft/world/entity/vehicle/minecart/MinecartBehavior;
-  call net/minecraft/world/entity/vehicle/minecart/NewMinecartBehavior.cartHasPosRotLerp()Z
-  call net/minecraft/world/entity/vehicle/minecart/Minecart.getPassengerRidingPosition(Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/phys/Vec3;
-  call net/minecraft/world/entity/vehicle/minecart/Minecart.position()Lnet/minecraft/world/phys/Vec3;
-  call net/minecraft/world/phys/Vec3.subtract(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
-  call net/minecraft/world/entity/Entity.getVehicleAttachmentPoint(Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/phys/Vec3;
-  call net/minecraft/world/phys/Vec3.subtract(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
-  field eyeHeightOld F
-  field eyeHeight F
-  call net/minecraft/util/Mth.lerp(FFF)F
-  call net/minecraft/world/phys/Vec3.<init>(DDD)V
-  call net/minecraft/world/phys/Vec3.add(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
-  call net/minecraft/world/entity/Entity.getViewYRot(F)F
-  call net/minecraft/world/entity/Entity.getViewXRot(F)F
-  call net/minecraft/client/Camera.setRotation(FF)V
-  call net/minecraft/world/entity/vehicle/minecart/NewMinecartBehavior.getCartLerpPosition(F)Lnet/minecraft/world/phys/Vec3;
-  call net/minecraft/world/phys/Vec3.add(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
-  call net/minecraft/client/Camera.setPosition(Lnet/minecraft/world/phys/Vec3;)V
-  call net/minecraft/world/entity/Entity.getViewYRot(F)F
-  call net/minecraft/world/entity/Entity.getViewXRot(F)F
-  call net/minecraft/client/Camera.setRotation(FF)V
-  call net/minecraft/world/entity/Entity.getX()D
-  call net/minecraft/util/Mth.lerp(DDD)D
-  call net/minecraft/world/entity/Entity.getY()D
-  call net/minecraft/util/Mth.lerp(DDD)D
-  field eyeHeightOld F
-  field eyeHeight F
-  call net/minecraft/util/Mth.lerp(FFF)F
-  call net/minecraft/world/entity/Entity.getZ()D
-  call net/minecraft/util/Mth.lerp(DDD)D
-  call net/minecraft/client/Camera.setPosition(DDD)V
-  field yRot F
-  field xRot F
-  call net/minecraft/client/Camera.setRotation(FF)V
-  call net/minecraft/world/entity/LivingEntity.getScale()F
-  call net/minecraft/world/entity/LivingEntity.getAttributeValue(Lnet/minecraft/core/Holder;)D
-  call net/minecraft/world/entity/Entity.isPassenger()Z
-  call net/minecraft/world/entity/Entity.getVehicle()Lnet/minecraft/world/entity/Entity;
-  call net/minecraft/world/entity/LivingEntity.getScale()F
-  call net/minecraft/world/entity/LivingEntity.getAttributeValue(Lnet/minecraft/core/Holder;)D
-  call java/lang/Math.max(FF)F
-  call net/minecraft/client/Camera.getMaxZoom(F)F
-  call net/minecraft/client/Camera.move(FFF)V
-  call net/minecraft/world/entity/LivingEntity.isSleeping()Z
-  call net/minecraft/world/entity/LivingEntity.getBedOrientation()Lnet/minecraft/core/Direction;
-  call net/minecraft/core/Direction.toYRot()F
-  call net/minecraft/client/Camera.setRotation(FF)V
-  call net/minecraft/client/Camera.move(FFF)V
-[HOOKS] net/minecraft/client/MouseHandler.setup(Lcom/mojang/blaze3d/platform/Window;)V
-  call com/mojang/blaze3d/platform/InputConstants.setupMouseCallbacks(Lcom/mojang/blaze3d/platform/Window;Lorg/lwjgl/glfw/GLFWCursorPosCallbackI;Lorg/lwjgl/glfw/GLFWMouseButtonCallbackI;Lorg/lwjgl/glfw/GLFWScrollCallbackI;Lorg/lwjgl/glfw/GLFWDropCallbackI;)V
-[HOOKS] net/minecraft/client/MouseHandler.turnPlayer(D)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/Options.sensitivity()Lnet/minecraft/client/OptionInstance;
-  call net/minecraft/client/OptionInstance.get()Ljava/lang/Object;
-  call java/lang/Double.doubleValue()D
-  field minecraft Lnet/minecraft/client/Minecraft;
-  field smoothTurnX Lnet/minecraft/util/SmoothDouble;
-  field accumulatedDX D
-  call net/minecraft/util/SmoothDouble.getNewDeltaValue(DD)D
-  field smoothTurnY Lnet/minecraft/util/SmoothDouble;
-  field accumulatedDY D
-  call net/minecraft/util/SmoothDouble.getNewDeltaValue(DD)D
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/Options.getCameraType()Lnet/minecraft/client/CameraType;
-  call net/minecraft/client/CameraType.isFirstPerson()Z
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/player/LocalPlayer.isScoping()Z
-  field smoothTurnX Lnet/minecraft/util/SmoothDouble;
-  call net/minecraft/util/SmoothDouble.reset()V
-  field smoothTurnY Lnet/minecraft/util/SmoothDouble;
-  call net/minecraft/util/SmoothDouble.reset()V
-  field accumulatedDX D
-  field accumulatedDY D
-  field smoothTurnX Lnet/minecraft/util/SmoothDouble;
-  call net/minecraft/util/SmoothDouble.reset()V
-  field smoothTurnY Lnet/minecraft/util/SmoothDouble;
-  call net/minecraft/util/SmoothDouble.reset()V
-  field accumulatedDX D
-  field accumulatedDY D
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/Minecraft.getTutorial()Lnet/minecraft/client/tutorial/Tutorial;
-  call net/minecraft/client/tutorial/Tutorial.onMouse(DD)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  field minecraft Lnet/minecraft/client/Minecraft;
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/Options.invertMouseX()Lnet/minecraft/client/OptionInstance;
-  call net/minecraft/client/OptionInstance.get()Ljava/lang/Object;
-  call java/lang/Boolean.booleanValue()Z
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/Options.invertMouseY()Lnet/minecraft/client/OptionInstance;
-  call net/minecraft/client/OptionInstance.get()Ljava/lang/Object;
-  call java/lang/Boolean.booleanValue()Z
-  call net/minecraft/client/player/LocalPlayer.turn(DD)V
-[HOOKS] net/minecraft/client/gui/Gui.renderHotbarAndDecorations(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/multiplayer/MultiPlayerGameMode.getPlayerMode()Lnet/minecraft/world/level/GameType;
-  field spectatorGui Lnet/minecraft/client/gui/components/spectator/SpectatorGui;
-  call net/minecraft/client/gui/components/spectator/SpectatorGui.renderHotbar(Lnet/minecraft/client/gui/GuiGraphics;)V
-  call net/minecraft/client/gui/Gui.renderItemHotbar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/multiplayer/MultiPlayerGameMode.canHurtPlayer()Z
-  call net/minecraft/client/gui/Gui.renderPlayerHealth(Lnet/minecraft/client/gui/GuiGraphics;)V
-  call net/minecraft/client/gui/Gui.renderVehicleHealth(Lnet/minecraft/client/gui/GuiGraphics;)V
-  call net/minecraft/client/gui/Gui.nextContextualInfoState()Lnet/minecraft/client/gui/Gui$ContextualInfo;
-  field contextualInfoBar Lorg/apache/commons/lang3/tuple/Pair;
-  call org/apache/commons/lang3/tuple/Pair.getKey()Ljava/lang/Object;
-  field contextualInfoBarRenderers Ljava/util/Map;
-  call java/util/Map.get(Ljava/lang/Object;)Ljava/lang/Object;
-  call java/util/function/Supplier.get()Ljava/lang/Object;
-  call org/apache/commons/lang3/tuple/Pair.of(Ljava/lang/Object;Ljava/lang/Object;)Lorg/apache/commons/lang3/tuple/Pair;
-  field contextualInfoBar Lorg/apache/commons/lang3/tuple/Pair;
-  field contextualInfoBar Lorg/apache/commons/lang3/tuple/Pair;
-  call org/apache/commons/lang3/tuple/Pair.getValue()Ljava/lang/Object;
-  call net/minecraft/client/gui/contextualbar/ContextualBarRenderer.renderBackground(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/multiplayer/MultiPlayerGameMode.hasExperience()Z
-  field minecraft Lnet/minecraft/client/Minecraft;
-  field minecraft Lnet/minecraft/client/Minecraft;
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/gui/contextualbar/ContextualBarRenderer.renderExperienceLevel(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;I)V
-  field contextualInfoBar Lorg/apache/commons/lang3/tuple/Pair;
-  call org/apache/commons/lang3/tuple/Pair.getValue()Ljava/lang/Object;
-  call net/minecraft/client/gui/contextualbar/ContextualBarRenderer.render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/multiplayer/MultiPlayerGameMode.getPlayerMode()Lnet/minecraft/world/level/GameType;
-  call net/minecraft/client/gui/Gui.renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/player/LocalPlayer.isSpectator()Z
-  field spectatorGui Lnet/minecraft/client/gui/components/spectator/SpectatorGui;
-  call net/minecraft/client/gui/components/spectator/SpectatorGui.renderAction(Lnet/minecraft/client/gui/GuiGraphics;)V
-[HOOKS] net/minecraft/client/gui/Gui.renderItemHotbar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V
-  call net/minecraft/client/gui/Gui.getCameraPlayer()Lnet/minecraft/world/entity/player/Player;
-  call net/minecraft/world/entity/player/Player.getOffhandItem()Lnet/minecraft/world/item/ItemStack;
-  call net/minecraft/world/entity/player/Player.getMainArm()Lnet/minecraft/world/entity/HumanoidArm;
-  call net/minecraft/world/entity/HumanoidArm.getOpposite()Lnet/minecraft/world/entity/HumanoidArm;
-  call net/minecraft/client/gui/GuiGraphics.guiWidth()I
-  field HOTBAR_SPRITE Lnet/minecraft/resources/Identifier;
-  call net/minecraft/client/gui/GuiGraphics.guiHeight()I
-  call net/minecraft/client/gui/GuiGraphics.blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V
-  field HOTBAR_SELECTION_SPRITE Lnet/minecraft/resources/Identifier;
-  call net/minecraft/world/entity/player/Player.getInventory()Lnet/minecraft/world/entity/player/Inventory;
-  call net/minecraft/world/entity/player/Inventory.getSelectedSlot()I
-  call net/minecraft/client/gui/GuiGraphics.guiHeight()I
-  call net/minecraft/client/gui/GuiGraphics.blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V
-  call net/minecraft/world/item/ItemStack.isEmpty()Z
-  field HOTBAR_OFFHAND_LEFT_SPRITE Lnet/minecraft/resources/Identifier;
-  call net/minecraft/client/gui/GuiGraphics.guiHeight()I
-  call net/minecraft/client/gui/GuiGraphics.blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V
-  field HOTBAR_OFFHAND_RIGHT_SPRITE Lnet/minecraft/resources/Identifier;
-  call net/minecraft/client/gui/GuiGraphics.guiHeight()I
-  call net/minecraft/client/gui/GuiGraphics.blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V
-  call net/minecraft/client/gui/GuiGraphics.guiHeight()I
-  call net/minecraft/world/entity/player/Player.getInventory()Lnet/minecraft/world/entity/player/Inventory;
-  call net/minecraft/world/entity/player/Inventory.getItem(I)Lnet/minecraft/world/item/ItemStack;
-  call net/minecraft/client/gui/Gui.renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V
-  call net/minecraft/world/item/ItemStack.isEmpty()Z
-  call net/minecraft/client/gui/GuiGraphics.guiHeight()I
-  call net/minecraft/client/gui/Gui.renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V
-  call net/minecraft/client/gui/Gui.renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/Options.attackIndicator()Lnet/minecraft/client/OptionInstance;
-  call net/minecraft/client/OptionInstance.get()Ljava/lang/Object;
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/player/LocalPlayer.getAttackStrengthScale(F)F
-  call net/minecraft/client/gui/GuiGraphics.guiHeight()I
-  field HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE Lnet/minecraft/resources/Identifier;
-  call net/minecraft/client/gui/GuiGraphics.blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V
-  field HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE Lnet/minecraft/resources/Identifier;
-  call net/minecraft/client/gui/GuiGraphics.blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIIIIII)V
-[HOOKS] net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.getHoveredSlot(DD)Lnet/minecraft/world/inventory/Slot;
-  field menu Lnet/minecraft/world/inventory/AbstractContainerMenu;
-  call net/minecraft/core/NonNullList.iterator()Ljava/util/Iterator;
-  call java/util/Iterator.hasNext()Z
-  call java/util/Iterator.next()Ljava/lang/Object;
-  call net/minecraft/world/inventory/Slot.isActive()Z
-  call net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.isHovering(Lnet/minecraft/world/inventory/Slot;DD)Z
-[HOOKS] net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.checkHotbarMouseClicked(Lnet/minecraft/client/input/MouseButtonEvent;)V
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  field menu Lnet/minecraft/world/inventory/AbstractContainerMenu;
-  call net/minecraft/world/inventory/AbstractContainerMenu.getCarried()Lnet/minecraft/world/item/ItemStack;
-  call net/minecraft/world/item/ItemStack.isEmpty()Z
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/KeyMapping.matchesMouse(Lnet/minecraft/client/input/MouseButtonEvent;)Z
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  call net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ClickType;)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/KeyMapping.matchesMouse(Lnet/minecraft/client/input/MouseButtonEvent;)Z
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  call net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ClickType;)V
-[HOOKS] net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.isHovering(Lnet/minecraft/world/inventory/Slot;DD)Z
-  call net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.isHovering(IIIIDD)Z
-[HOOKS] net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.isHovering(IIIIDD)Z
-  field leftPos I
-  field topPos I
-[HOOKS] net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.checkHotbarKeyPressed(Lnet/minecraft/client/input/KeyEvent;)Z
-  field menu Lnet/minecraft/world/inventory/AbstractContainerMenu;
-  call net/minecraft/world/inventory/AbstractContainerMenu.getCarried()Lnet/minecraft/world/item/ItemStack;
-  call net/minecraft/world/item/ItemStack.isEmpty()Z
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/KeyMapping.matches(Lnet/minecraft/client/input/KeyEvent;)Z
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  call net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ClickType;)V
-  field minecraft Lnet/minecraft/client/Minecraft;
-  call net/minecraft/client/KeyMapping.matches(Lnet/minecraft/client/input/KeyEvent;)Z
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  field hoveredSlot Lnet/minecraft/world/inventory/Slot;
-  call net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ClickType;)V
-[HOOKS] net/minecraft/client/KeyMapping.matches(Lnet/minecraft/client/input/KeyEvent;)Z
-  call net/minecraft/client/input/KeyEvent.key()I
-  call com/mojang/blaze3d/platform/InputConstants$Key.getValue()I
-  field key Lcom/mojang/blaze3d/platform/InputConstants$Key;
-  call com/mojang/blaze3d/platform/InputConstants$Key.getType()Lcom/mojang/blaze3d/platform/InputConstants$Type;
-  field key Lcom/mojang/blaze3d/platform/InputConstants$Key;
-  call com/mojang/blaze3d/platform/InputConstants$Key.getValue()I
-  call net/minecraft/client/input/KeyEvent.scancode()I
-  field key Lcom/mojang/blaze3d/platform/InputConstants$Key;
-  call com/mojang/blaze3d/platform/InputConstants$Key.getType()Lcom/mojang/blaze3d/platform/InputConstants$Type;
-  field key Lcom/mojang/blaze3d/platform/InputConstants$Key;
-  call com/mojang/blaze3d/platform/InputConstants$Key.getValue()I
-  call net/minecraft/client/input/KeyEvent.key()I
-
-> Task :downloadAssets
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795410221855.json
+> Task :compileGametestJava FAILED
+/home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/src/gametest/java/com/visionmod/VisionInvisibilityGameTest.java:6: error: cannot find symbol
+import net.minecraft.world.entity.monster.Husk;
+                                         ^
+  symbol:   class Husk
+  location: package net.minecraft.world.entity.monster
+/home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/src/gametest/java/com/visionmod/VisionInvisibilityGameTest.java:23: error: cannot find symbol
+            context.waitFor(mc -> VisionFeaturePack.viewedTarget() instanceof Husk, 60);
+                                                                              ^
+  symbol:   class Husk
+  location: class VisionInvisibilityGameTest
+/home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/src/gametest/java/com/visionmod/VisionInvisibilityGameTest.java:50: error: cannot find symbol
+            context.waitFor(mc -> VisionFeaturePack.viewedTarget() instanceof Husk, 40);
+                                                                              ^
+  symbol:   class Husk
+  location: class VisionInvisibilityGameTest
+Note: /home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/src/gametest/java/com/visionmod/VisionOreHighlightGameTest.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+3 errors
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795417990092.json
 
 [Incubating] Problems report is available at: file:///home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileGametestJava' (registered by plugin class 'org.gradle.api.plugins.JavaBasePlugin').
+> Compilation failed; see the compiler output below.
+  Note: /home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/src/gametest/java/com/visionmod/VisionOreHighlightGameTest.java uses or overrides a deprecated API.
+  Note: Recompile with -Xlint:deprecation for details.
+  /home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/src/gametest/java/com/visionmod/VisionInvisibilityGameTest.java:6: error: cannot find symbol
+  import net.minecraft.world.entity.monster.Husk;
+                                           ^
+    symbol:   class Husk
+    location: package net.minecraft.world.entity.monster
+  /home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/src/gametest/java/com/visionmod/VisionInvisibilityGameTest.java:23: error: cannot find symbol
+              context.waitFor(mc -> VisionFeaturePack.viewedTarget() instanceof Husk, 60);
+                                                                                ^
+    symbol:   class Husk
+    location: class VisionInvisibilityGameTest
+  /home/runner/work/VisionMod-2.0.0/VisionMod-2.0.0/src/gametest/java/com/visionmod/VisionInvisibilityGameTest.java:50: error: cannot find symbol
+              context.waitFor(mc -> VisionFeaturePack.viewedTarget() instanceof Husk, 40);
+                                                                                ^
+    symbol:   class Husk
+    location: class VisionInvisibilityGameTest
+  3 errors
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
 
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
 
@@ -501,5 +70,5 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 36s
-6 actionable tasks: 6 executed
+BUILD FAILED in 18s
+3 actionable tasks: 3 executed
