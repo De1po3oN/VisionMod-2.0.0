@@ -28,6 +28,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -39,9 +44,14 @@ import java.util.Properties;
  * a full clone or server-side kill attribution.
  */
 public final class VisionExtendedFeatures {
+    public static final String FRIEND_ZONE = "Friend Zone";
+    static final int FRIEND_RADIUS = 48;
+    static final int FRIEND_LIMIT = 64;
+    static final int FRIEND_NAME_LIMIT = 64;
+    static final int FRIENDS_TEXT_LIMIT = FRIEND_LIMIT * (FRIEND_NAME_LIMIT + 2);
     public static final String[] NAMES = {
         "Block Overlay", "Kill Effect", "World Color", "World Lyrics",
-        "Local Pet", "Social Radar", "Custom Sound", "Clear Weather FX"
+        "Local Pet", FRIEND_ZONE, "Custom Sound", "Clear Weather FX"
     };
     private static final boolean[] FLAGS = new boolean[NAMES.length];
     private static final Path FILE = FabricLoader.getInstance().getConfigDir()
@@ -55,9 +65,8 @@ public final class VisionExtendedFeatures {
     private static int lastShownDeathSequence;
     private static String lastTarget = "";
     private static String lyric = "";
-    private static String friends = "";
-    private static String friendsNearby = "";
-    private static java.util.List<String> friendRows=java.util.List.of();
+    private static final LinkedHashMap<String, String> friends = new LinkedHashMap<>();
+    private static List<String> friendRows = List.of();
     private static int soundPreset;
     public static String soundLabel(){return switch(soundPreset){case 1->"AMETHYST";case 2->"CHIME";default->"SOFT";};}
     public static int soundPreset(){return soundPreset;}
@@ -110,8 +119,49 @@ public final class VisionExtendedFeatures {
     }
 
     public static String customText() { return lyric; }
-    public static String friendNames() { return friends; }
-    public static String nearbyFriends() { return friendsNearby.isBlank() ? "No friends nearby" : friendsNearby; }
+    public static String friendNames() { return String.join(", ", friends.values()); }
+    static int friendCount() { return friends.size(); }
+    static List<String> friendList() { return List.copyOf(friends.values()); }
+    static boolean isFriend(String name) { return friends.containsKey(friendKey(name)); }
+    static boolean validFriendName(String name) {
+        return !name.isBlank() && name.length() <= FRIEND_NAME_LIMIT
+            && name.codePoints().noneMatch(c -> c == ',' || c == '§' || Character.isISOControl(c));
+    }
+    private static String friendKey(String name) {
+        return name.toLowerCase(Locale.ROOT);
+    }
+    static boolean addFriend(String name) {
+        String nick = name.strip();
+        if (!validFriendName(nick) || friendCount() >= FRIEND_LIMIT || isFriend(nick)) return false;
+        friends.put(friendKey(nick), nick);
+        saveFriendChanges();
+        return true;
+    }
+    static void removeFriend(String name) {
+        if (friends.remove(friendKey(name)) != null) saveFriendChanges();
+    }
+    private static void saveFriendChanges() {
+        ticks = 19; // Refresh the radar on the next client tick.
+        save();
+    }
+
+    record NearbyPlayer(String name, double distanceSquared) {
+        int distance() { return (int) Math.round(Math.sqrt(distanceSquared)); }
+    }
+    static List<NearbyPlayer> nearbyPlayers(Minecraft mc) {
+        if (mc.level == null || mc.player == null) return List.of();
+        List<NearbyPlayer> nearby = new ArrayList<>();
+        for (Player other : mc.level.players()) {
+            if (other == mc.player || other.isRemoved() || other.getUUID().equals(mc.player.getUUID())) continue;
+            double distance = other.distanceToSqr(mc.player);
+            String name = other.getGameProfile().name();
+            if (Double.isFinite(distance) && distance <= FRIEND_RADIUS * FRIEND_RADIUS && validFriendName(name)) {
+                nearby.add(new NearbyPlayer(name, distance));
+            }
+        }
+        nearby.sort(Comparator.comparingDouble(NearbyPlayer::distanceSquared).thenComparing(NearbyPlayer::name));
+        return List.copyOf(nearby);
+    }
 
     /** Edit user-owned text directly in the GUI; never ship copied lyrics. */
     public static void setCustomText(String text) {
@@ -120,9 +170,17 @@ public final class VisionExtendedFeatures {
         save();
     }
     public static void setFriendNames(String text) {
-        friends = text == null ? "" : text.replaceAll("[\\r\\n\\p{Cntrl}]", " ").trim();
-        if (friends.length() > 120) friends = friends.substring(0, 120);
-        save();
+        readFriendNames(text);
+        saveFriendChanges();
+    }
+    private static void readFriendNames(String text) {
+        friends.clear();
+        if (text == null) return;
+        for (String entry : text.split(",")) {
+            String name = entry.strip();
+            if (validFriendName(name)) friends.putIfAbsent(friendKey(name), name);
+            if (friendCount() >= FRIEND_LIMIT) break;
+        }
     }
 
     public static void init() {
@@ -165,7 +223,7 @@ public final class VisionExtendedFeatures {
             lastPlayedHitSequence = VisionCombatTracker.hitSequence();
             lastShownDeathSequence = VisionCombatTracker.deathSequence();
             lastTarget = "";
-            friendsNearby = "";friendRows=java.util.List.of();
+            friendRows = List.of();
             return;
         }
         if (!VisionModClient.enabled) {
@@ -195,25 +253,10 @@ public final class VisionExtendedFeatures {
 
         if (++ticks >= 20) {
             ticks = 0;
-            if (FLAGS[5] && !friends.isBlank()) {
-                StringBuilder near = new StringBuilder();
-                java.util.ArrayList<String> rows=new java.util.ArrayList<>();
-                for (Player other : mc.level.players()) {
-                    if (other == mc.player || other.distanceToSqr(mc.player) > 48 * 48) continue;
-                    String name = other.getGameProfile().name();
-                    for (String friend : friends.split(",")) {
-                        if (!friend.trim().isEmpty() && friend.trim().equalsIgnoreCase(name)) {
-                            if (near.length() > 0) near.append(", ");
-                            if (near.length() < 95) near.append(name);
-                            if(rows.size()<6)rows.add(name+"  ·  "+Math.round(Math.sqrt(other.distanceToSqr(mc.player)))+" m");
-                            break;
-                        }
-                    }
-                }
-                friendsNearby = near.toString();friendRows=java.util.List.copyOf(rows);
-            } else {
-                friendsNearby = "";friendRows=java.util.List.of();
-            }
+            friendRows = FLAGS[5] && !friends.isEmpty()
+                ? nearbyPlayers(mc).stream().filter(player -> isFriend(player.name())).limit(6)
+                    .map(player -> player.name() + "  ·  " + player.distance() + " м").toList()
+                : List.of();
         }
     }
 
@@ -268,7 +311,7 @@ public final class VisionExtendedFeatures {
                 FLAGS[i] = Boolean.parseBoolean(p.getProperty("feature." + i, "false"));
             lyric = p.getProperty("ownLyric", "").replace("\r", " ").replace("\n", " ").trim();
             if (lyric.equals("YOUR WORLD | YOUR STORY")) lyric="";
-            friends = p.getProperty("friends", "");
+            readFriendNames(p.getProperty("friends", ""));
             worldColor = Math.max(0, Math.min(2, Integer.parseInt(p.getProperty("worldColor", "0"))));
             soundPreset=Math.clamp(Integer.parseInt(p.getProperty("soundPreset","0")),0,2);
             petColor = (int)Long.parseLong(p.getProperty("petColor", "ffa89cff"),16);
@@ -281,7 +324,7 @@ public final class VisionExtendedFeatures {
         for (int i = 0; i < FLAGS.length; i++)
             p.setProperty("feature." + i, Boolean.toString(FLAGS[i]));
         p.setProperty("ownLyric", lyric);
-        p.setProperty("friends", friends);
+        p.setProperty("friends", friendNames());
         p.setProperty("worldColor", Integer.toString(worldColor));
         p.setProperty("soundPreset",Integer.toString(soundPreset));
         p.setProperty("petColor", Integer.toHexString(petColor));

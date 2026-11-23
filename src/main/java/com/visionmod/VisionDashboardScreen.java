@@ -55,7 +55,6 @@ public final class VisionDashboardScreen extends Screen {
     };
     private int captureBind = -1;
     private EditBox search;
-    private EditBox customText;
     private List<Module> cachedModules = List.of();
     private String cachedQuery = null;
     private int cachedCategory = -1;
@@ -214,7 +213,7 @@ public final class VisionDashboardScreen extends Screen {
                 case 2 -> "Тёплые и холодные оттенки мира";
                 case 3 -> "Музыка из системного плеера · без расширений";
                 case 4 -> "Плавное следование за камерой и прыжками";
-                case 5 -> "Панель друзей поблизости · до 48 блоков";
+                case 5 -> "Список друзей и игроков рядом · до 48 блоков";
                 case 6 -> "Звуковой отклик на попадание";
                 default -> "Настройка погодных частиц";
             },
@@ -223,7 +222,8 @@ public final class VisionDashboardScreen extends Screen {
             id==6 ? VisionExtendedFeatures::cycleSound :
             id==3 ? ()->net.minecraft.client.Minecraft.getInstance().setScreen(new VisionLyricsScreen()) :
             id==2 ? VisionExtendedFeatures::cycleWorldColor :
-                id==4 ? VisionExtendedFeatures::cyclePetColor : null));
+                id==4 ? VisionExtendedFeatures::cyclePetColor :
+                id==5 ? ()->net.minecraft.client.Minecraft.getInstance().setScreen(new VisionFriendZoneScreen()) : null));
     }
 
     private static void motion(List<Module> m,int category,int id) {
@@ -308,9 +308,6 @@ public final class VisionDashboardScreen extends Screen {
         search.setValue(previousQuery);
         search.setResponder(value->{page=0;cachedQuery=null;});
         addRenderableWidget(search);
-        customText=new EditBox(font,left+24,top+116,w-48,20,Component.literal("Друзья через запятую"));
-        customText.setMaxLength(120);customText.visible=false;customText.active=false;
-        addRenderableWidget(customText);
         if(details!=null)openDetails(details);
         page=Math.min(page,maxPage(filtered()));
         VisionMenuSession.entered(this);
@@ -330,7 +327,8 @@ public final class VisionDashboardScreen extends Screen {
         String query=search.getValue().trim().toLowerCase(Locale.ROOT);
         if(cachedCategory==category&&query.equals(cachedQuery))return cachedModules;
         cachedModules=CATALOG.stream().filter(m->query.isEmpty()?m.category==category:
-            (m.title+" "+m.info).toLowerCase(Locale.ROOT).contains(query)).toList();
+            (m.title+" "+m.info).toLowerCase(Locale.ROOT).contains(query)||
+                (m.title.equals(VisionExtendedFeatures.FRIEND_ZONE)&&"social radar френд зона".contains(query))).toList();
         cachedCategory=category;cachedQuery=query;return cachedModules;
     }
     private int cardX(int i){return left+layout.cardLeft(i);}
@@ -513,11 +511,8 @@ public final class VisionDashboardScreen extends Screen {
     }
     private void openDetails(Module module){
         details=module;search.setFocused(false);
-        customText.visible=module.title.equals("Social Radar");customText.active=customText.visible;
-        customText.setResponder(v->{});
-        if(customText.visible){customText.setValue(VisionExtendedFeatures.friendNames());customText.setResponder(VisionExtendedFeatures::setFriendNames);}
     }
-    private void closeDetails(){details=null;customText.visible=false;customText.active=false;customText.setFocused(false);}
+    private void closeDetails(){details=null;}
     private void renderDetails(GuiGraphics g,int mx,int my){
         overlay(g,details.title);
         int y=top+59;
@@ -537,11 +532,10 @@ public final class VisionDashboardScreen extends Screen {
             case "World Color" -> "Палитра: "+VisionExtendedFeatures.colorLabel();
             case "Hit Color" -> "Цвет: "+VisionTools2.hitColorName();
             case "World Lyrics" -> VisionMediaSession.state();
-            case "Social Radar" -> "Друзья через запятую";
+            case VisionExtendedFeatures.FRIEND_ZONE -> "В списке друзей: "+VisionExtendedFeatures.friendCount();
             default -> details.enabled.getAsBoolean()?"Модуль включён":"Модуль выключен";
         };
         textFit(g,value,left+24,top+97,w-48,WHITE);
-        if(details.title.equals("Social Radar"))textFit(g,VisionExtendedFeatures.nearbyFriends(),left+24,top+142,w-48,accent());
         int bw=(w-58)/2,by=top+h-72;
         button(g,left+24,by,bw,26,details.enabled.getAsBoolean()?"Выключить":"Включить",details.enabled.getAsBoolean(),mx,my);
         if(details.options!=null)button(g,left+34+bw,by,bw,26,"Настроить",false,mx,my);
@@ -553,7 +547,6 @@ public final class VisionDashboardScreen extends Screen {
         if(details!=null||modal!=0){
             if(b==0&&inside(mx,my,left+w-43,top+12,30,28)){modal=0;closeDetails();return true;}
             if(details!=null){
-                if(customText.visible&&inside(mx,my,customText.getX(),customText.getY(),customText.getWidth(),20))return super.mouseClicked(e,doubled);
                 int bw=(w-58)/2;
                 if(b==0){
                     if(inside(mx,my,left+24,top+h-72,bw,26))details.toggle.run();
@@ -605,10 +598,7 @@ public final class VisionDashboardScreen extends Screen {
         if(captureBind>=0){VisionHotkeys.assign(captureBind,e.key()==GLFW.GLFW_KEY_ESCAPE?0:e.key());captureBind=-1;return true;}
         if(VisionMenuSession.closeFromKey(this,e))return true;
         if(e.key()==GLFW.GLFW_KEY_ESCAPE&&(details!=null||modal!=0)){modal=0;closeDetails();return true;}
-        if(details!=null||modal!=0){
-            if(customText.visible)return super.keyPressed(e);
-            return true;
-        }
+        if(details!=null||modal!=0)return true;
         return super.keyPressed(e);
     }
     @Override public boolean isPauseScreen(){return false;}

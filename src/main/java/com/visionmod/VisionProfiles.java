@@ -170,7 +170,7 @@ public final class VisionProfiles {
         boolean playerBadge=optionalFlag(data,"playerBadge",VisionAppearance.playerBadge);
         boolean hideEntityNames=optionalFlag(data,"hideEntityNames",VisionAppearance.hideEntityNames);
         String ownLyric=optionalText(data,"ownLyric",VisionExtendedFeatures.customText());
-        String friends=optionalText(data,"friends",VisionExtendedFeatures.friendNames());
+        String friends=optionalText(data,"friends",VisionExtendedFeatures.friendNames(),VisionExtendedFeatures.FRIENDS_TEXT_LIMIT);
         int trailStart=optionalHex(data,"trailStart",VisionWorldEffects.trailStartColor());
         int trailEnd=optionalHex(data,"trailEnd",VisionWorldEffects.trailEndColor());
         int trailMode=optionalChoice(data,"trailMode",VisionWorldEffects.trailMode(),0,1,2);
@@ -372,9 +372,12 @@ public final class VisionProfiles {
         if(values!=null)for(int i=0;i<values.length;i++)if(values[i]!=selected.test(i))toggle.accept(i);
     }
     private static String optionalText(JsonObject data,String key,String fallback) {
+        return optionalText(data,key,fallback,120);
+    }
+    private static String optionalText(JsonObject data,String key,String fallback,int maxLength) {
         if(!data.has(key))return fallback;
         var v=data.get(key);
-        if(!v.isJsonPrimitive()||!v.getAsJsonPrimitive().isString()||v.getAsString().length()>120)
+        if(!v.isJsonPrimitive()||!v.getAsJsonPrimitive().isString()||v.getAsString().length()>maxLength)
             throw new IllegalArgumentException("Invalid text: "+key);
         return v.getAsString();
     }

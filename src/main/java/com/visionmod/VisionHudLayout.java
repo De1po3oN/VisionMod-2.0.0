@@ -38,7 +38,7 @@ public final class VisionHudLayout {
         LYRICS("World Lyrics"),
         KILL("Kill Effect"),
         TAB("TAB Heads"),
-        SOCIAL("Social Radar");
+        SOCIAL(VisionExtendedFeatures.FRIEND_ZONE);
 
         public final String label;
         private boolean moved;
