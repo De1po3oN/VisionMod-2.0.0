@@ -1,6 +1,6 @@
 # Vision Mod 2.0.0 · Open Beta
 
-Новый GUI: адаптивные карточки, компактная навигация и единый стиль настроек. Подпись проекта: **ТГК @cocok_ali · сервер mc.showtime.su**. [Скачать мод](https://github.com/De1po3oN/VisionMod-2.0.0/raw/2280958ba889d5d42b590c9cb34e7b052a2198e5/build/visionmod-2.0.0.jar) · [Скриншот](https://raw.githubusercontent.com/De1po3oN/VisionMod-1.0.0/fbb3ccf15654feab0f13b81ef5d44e1aa7f68583/world/33-gui-desktop.png) · [Проверки](GUI_REDESIGN_QA_RU.md).
+Новый GUI: адаптивные карточки, компактная навигация и единый стиль настроек. Подпись проекта: **ТГК @cocok_ali · сервер mc.showtime.su**. [Скачать мод](https://github.com/De1po3oN/VisionMod-2.0.0/raw/ddd8a79243b0f78f321979d6eec6169590b69f44/build/visionmod-2.0.0.jar) · [Скриншот](https://raw.githubusercontent.com/De1po3oN/VisionMod-1.0.0/fbb3ccf15654feab0f13b81ef5d44e1aa7f68583/world/33-gui-desktop.png) · [Проверки](GUI_REDESIGN_QA_RU.md).
 
 Обновление GUI, World Lyrics и Spear: плавные переключатели, Inter, появление строк, более устойчивый разбор названий и эффекты реальных действий копья. [Готовый JAR](https://github.com/De1po3oN/VisionMod-1.0.0/raw/7395c1ef68055727ca4589bbe8b7528ddc60013c/build/visionmod-2.0.0.jar) · [проверки и кадры](REFERENCE_REFRESH_QA_RU.md).
 
