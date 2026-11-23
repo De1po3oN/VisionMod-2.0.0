@@ -3,12 +3,17 @@ package com.visionmod;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.client.CameraType;
-import net.minecraft.world.entity.monster.Husk;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.EntityHitResult;
 
 import static com.visionmod.GuiTestInput.check;
 
 final class VisionInvisibilityGameTest {
+    private static boolean huskSelected() {
+        var target = VisionFeaturePack.viewedTarget();
+        return target != null && target.getType() == EntityType.HUSK;
+    }
+
     static void run(ClientGameTestContext context, TestSingleplayerContext world) {
         context.runOnClient(mc -> {
             mc.options.setCameraType(CameraType.FIRST_PERSON);
@@ -20,7 +25,7 @@ final class VisionInvisibilityGameTest {
         world.getServer().runCommand("item replace entity @p weapon.mainhand with minecraft:wooden_sword");
         world.getServer().runCommand("summon minecraft:husk 20.5 -60 3.5 {NoAI:1b,Silent:1b,PersistenceRequired:1b,Tags:[\"vision_visibility_target\"]}");
         try {
-            context.waitFor(mc -> VisionFeaturePack.viewedTarget() instanceof Husk, 60);
+            context.waitFor(mc -> huskSelected(), 60);
             int id = context.computeOnClient(mc -> VisionFeaturePack.viewedTarget().getId());
             int before = context.computeOnClient(mc -> VisionCombatTracker.hitSequence());
             context.getInput().pressMouse(0);
@@ -47,7 +52,7 @@ final class VisionInvisibilityGameTest {
             });
 
             world.getServer().runCommand("effect clear @e[tag=vision_visibility_target] minecraft:invisibility");
-            context.waitFor(mc -> VisionFeaturePack.viewedTarget() instanceof Husk, 40);
+            context.waitFor(mc -> huskSelected(), 40);
             System.out.println("[VisionMod][INVISIBILITY] PASS: outline, cached HUD, combat feedback, server-applied invisibility and visible target recovery");
         } finally {
             world.getServer().runCommand("kill @e[tag=vision_visibility_target]");
