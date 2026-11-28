@@ -1,440 +1,289 @@
-*** 2026-11-18 · НЕ ТЕРЯТЬ ПОДПИСЬ ПРОЕКТА ПРИ ПЕРЕДЕЛКЕ GUI ***
-По запросу пользователя восстановлены ТГК @cocok_ali и сервер mc.showtime.su. Общие константы: VisionMenuTheme.TELEGRAM/SERVER. VisionGuiTheme.branding вызывается в Dashboard и PanelScreen, подпись под кнопками без изменения геометрии. Сохранять эти данные в новых оформлениях. Code 95134c5b6d47d3bacb17b1b4835fd44299b3c999, evidence fbb3ccf15654feab0f13b81ef5d44e1aa7f68583; build44274108412/client44274108433/world44274108458 PASS, JAR и кадры: GUI_REDESIGN_QA_RU.md.
-
-*** 2026-11-17 · GUI REDESIGN — ПРОВЕРЕНО В ИГРЕ ***
-Code 611d5095ae3245959332d018f22d5c40bcc904ee, codex/visual-refresh. QA и готовый JAR: GUI_REDESIGN_QA_RU.md. Evidence 9289d6d3e832aad246a04ae4125757acec2322cb; build/world/smoke указывают на этот code SHA. Main не менялась.
-DashboardLayout теперь задаёт contentLeft, cardHeight, tabTop/tabHeight, navigationTop и footer actions: не возвращать старые +22/73/60/-48 координаты! Небольшой GUI показывает2/4 карточки, большой6. Навигация с иконками, карточная кнопка параметров ЛКМ, ПКМ и СКМ прежние. Поиск фокусируется по всей поверхности и очищается через X. Пустая подсказка рисуется VisionFonts, иначе EditBox теряет шрифт; ввод и курсор остаются нативными.
-VisionGuiTheme — только меню; не менять HUD ради скина GUI. VisionFonts.text() — прежний мировой шрифт; menu()/heading() — статические450/650 шрифты Vision UI, производные от открытого Inter. tools/generate-ui-fonts.py — dev utility, FontTools не нужен для запуска мода/обычной сборки. Лицензия и источник: THIRD_PARTY_NOTICES.md.
-CI44173593757 build /44173593622 client /44173593625 world — PASS. Новый GUI_DESIGN: реальные клики, поиск, очистка, параметры, темы, 640/1280/1440 snapshots; прежний MENU_MEMORY адаптирован под2карточки и проверяет вторую страницу, запрос/категорию и вложенные настройки. Локально365core; прежние media/pet/world regressions PASS. Полный актуальный интерфейс просмотрен на PNG, не рисованный макет.
-
-*** 2026-11-17 · GUI / WORLD LYRICS / SPEAR — ПРОВЕРЕННЫЙ КОД ***
-Code SHA 11098df92629968896be6101d8df0209725ef2b4, ветка codex/visual-refresh. Main не менялась. JAR/evidence и точные проверки: REFERENCE_REFRESH_QA_RU.md; evidence 7395c1ef68055727ca4589bbe8b7528ddc60013c.
-SpearLungeMixin теперь на MultiPlayerGameMode.piercingAttack, не Player.lungeForwardMaybe. Мгновенная getDeltaMovement пропускает реальное движение: нужен bounded SpearLungeTrigger по координатам после native action, Lunge enchant, направлению/ускорению; максимум16 наблюдений, один эффект, сброс OFF/оружие/мир/teleport. Реальный mouse attack + Lunge III PASS. Pierce: ClientboundDamageEventPacket.sourceType SPEAR (PLAYER_ATTACK не подходит), sourceCauseId локального игрока. Новая геометрия VisionSpearEffects, параметры в motion-2.properties + VisionProfiles.
-Inter взят из официального Google Fonts, не из Fading; лицензия assets/visionmod/font/inter-ofl.txt (нижний регистр обязателен для resource pack). VisionFonts использует Style.withFont(FontDescription.Resource). LyricEntrance — только короткий вход строки, без выдуманной синхронизации слов. Не возвращать приватные классы/ассеты Fading в репозиторий.
-CI: build44118472087/client44118471926/world44118471891 все PASS. Локальный jdk.compiler есть, но нет ct.sym; local core проверялся source/target21, CI настоящий --release21. Native media backend после709789e1 не менялся. Яндекс account playback не проверен, public HTTP451 — не обходить.
-
-*** 2026-11-17 · ТЕКСТЫ И ЯНДЕКС МУЗЫКА — КОД И ПРОВЕРКИ ***
-Запрос: подгружать тексты всех песен, подключить Яндекс Музыку, чистый мод без расширений. Всем каталогом и таймкодами для каждой песни никто не располагает; это ограничение пользователю объяснено. Финальный code SHA4a4630a390c0be7ece4a1e4ba1d625f28ff93057, codex/visual-refresh, main не менялась.
-VisionLyricsLookup: LyricsResult(timed,plain,source), LRCLIB exact/structured/free-text variants, authenticated Yandex search/direct track ID→LRC→TEXT, запасной lyrics.ovh. Параллельный поиск приоритизирует реальные таймкоды; найденный plain сохраняется даже при ошибке следующего поиска. LyricsHttp.Flight отменяет все HTTP на смене песни/токена; ответы ограничены200k/4s, 24positive cache, misses не вечные (60s retry). CACHE теперь Map<String,LyricsResult>; gametest reflection fixtures должны вставлять Result, не String.
-YandexMusicAccess: только пользовательский OAuth в памяти JVM, GUI WorldLyrics→ЯндексМузыка; masked widget вместо отсутствующего вMC1.21.11 EditBox.setFormatter! MaskedTokenBox.renderWidget рисует только bullets, createNarrationMessage скрывает значение. Токен не в config/profile, не отправляется на storage downloadURL, user не должен присылать токен в чат. Отказы401/403/429/451/5xx получают статус; доступ не обходится. YandexLyricsClient — свой JDK-клиент, открытые сведения о протоколе/совместимости в LYRICS_API_NOTES.md; сторонний Python SDK/ассеты не включались.
-SystemMediaTrack: sourceUrl/MPRIS xesam:url; совместимые5/8arg constructors, Яндекс app/URL classification и приоритет activeЯндекс передactiveдругим, pausedЯндекс не вытесняетPlaying. WindowsPS проверяет до8сессий, transient close не убивает процесс; native scripts/code после709789e1 не менялись. Yandex trackId учитывается в cache/смене; tracking-query params не сбрасывают слова.
-Source.current больше не показывает название вместо слов: pending/missing пусто, статусы вGUI. Реальные plain слова/плеербезпозиции читаются по строкам стрелками без выдуманного тайминга; LRC real timestamps предпочтительны. World renderer сохраняет физическую модель, положительныйX, NORMAL depth и END_MAIN; ряды длиннойLRCстроки больше не обрезаются на3, центрируются вертикально. Сам LrcTimeline сохраняет прежний лимит140символов на строку.
-Проверки4a4630a3: build /44057465429 PASS; client /44057465421 54toggles/8frames PASS; world /44057465423 WORLD_PLANE/LYRICS_PRESENCE/PET_MOTION/CONTROLS/INVENTORY/MENU_MEMORY/WORLDTEST PASS. 288core+259pet+12worldMotion+22source+8lookup+49multiProviderHTTP+mesh PASS. Plain GUI paging меняетworldtext; Yandex editor открывается, fake typed token не подключается сам; кадры25(masked) и26(5рядов) просмотрены. Worldglyph774/142, wall0; dedicated Done4.027s. Linux isolatedMPRIS PASS; actualWindows API /44055518577 на native code709789e1 PASS, не живая песня.
-LIVE_LYRICS production LRCLIB58 timed rows PASS. LIVE_YANDEX публичные метаданные изCI HTTP451, поэтому настоящий аккаунт/Яндекс-песня/закрытые тексты НЕ ПРОВЕРЕНЫ. Изlocal среды CONNECT403; сетевые ограничения не обходили. Протокол/auth/signature проверены реальным localHTTPfixture, это не доказательство живой авторизации Яндекса. Пользователь должен подключить личный OAuth в своёмMinecraft; доступ зависит от сервиса/региона/аккаунта. Не обещать ВСЕ песни, fake sync, поддержку macOS/Sodium/Iris/FPSgain.
-JAR5003207bytes SHA256b3319922162212884be5a3ebaade8f22008b889c5e0663e94306659f25816ad6; immutable evidence19745bfc03ca55e41cc6cb26d1b8e7749ad7a5b1/build/visionmod-2.0.0.jar. См.YANDEX_LYRICS_QA_RU.md, README, API_NOTES. Последующие docs-only commits не меняют JAR.
-
-*** 2026-11-17 · WORLD LYRICS — МОДЕЛЬ МИРА, НЕ ПРИКЛЕЕНА К КАМЕРЕ ***
-Пользователь отверг показанные ранее кадры: нужен текст как объект/модель мира, как питомец, но 2D, по ранее присланному референсу. Старый code7b24aa4 хотя использовал world Font, был camera-locked и выглядел как HUD. НЕ возвращать anchor=camera.position+forward*distance, billboard camera.rotation, SEE_THROUGH или одинаковый размер в разных F5. Запрошено имя референса через async; в истории есть Fading Light2.0.0, но самого JAR среди доступных файлов нет. Точное совпадение не заявлять и чужие ресурсы не копировать.
-Актуальный код64e7da5714da07286b049a8e0c61711c258505ce в codex/visual-refresh. WorldLyricMotion — физическая плоскость2.6 блока перед игроком, HEIGHT1.45; owner world position и player view yaw с пружинами, camera/FOV/viewport/CameraType не входы. Телепорт/world/player/OFF/long frame reset, animateOFF фиксирует относительно игрока. VisionWorldLyrics: world transform, yaw180-ownerYaw, масштаб(+.020,-.020,+.020), строка160 font units, front/back читаемы; нет continuous billboard. NORMAL font depth, own batch END_MAIN, стены и модели перекрывают текст. Источник/синхронизация/native/manual/значкиV сохранены.
-Локально288 core+259 pet+12 world motion+16 source+8 HTTP+mesh PASS. CI64e7da5: build /44044059874 PASS, client /44044059832 54toggles/8frames PASS, world /44044059797 WORLD_PLANE/LYRICS_PRESENCE/PET_MOTION/CONTROLS/INVENTORY/MENU_MEMORY/WORLDTEST PASS. Реальный Alt/мышь и F5 оставляют тот же world anchor. Framebuffer glyph pixels876 вблизи,142 издалека; каменная стена между камерой и моделью0 пикселей без отключения renderer; удаление стены восстанавливает буквы. Просмотрены19/20/21/22/23;22 показывает наклонную плоскость перед персонажем. Dedicated Fabric Done3.146s; public LRCLIB58 timed rows PASS. Живой трек/отсутствующий референс/Sodium/Iris/FPS не проверены.
-JAR4981566 bytes SHA25607ffdf02ff015192bb378db2bbdfccc13f61428dd7af55b368431b82ea1b07f8, immutable evidence2cccd41b14034e56268dab4b6e34f69603e5e04d/build/visionmod-2.0.0.jar. См.WORLD_LYRICS_PLANE_QA_RU.md. Main не менялась; документация послеcheckpoint не меняет JAR. ЧИСТЫЙ МОД БЕЗ РАСШИРЕНИЙ.
-
-*** 2026-11-17 · WORLD LYRICS ПЕРЕД КАМЕРОЙ / МЕТКИ V · ПРЕЖНИЙ РЕНДЕР ОТКЛОНЁН ***
-Запрос: текст сразу в мире, как питомец, но 2D и перед камерой; метка пользователей такого же мода у ника. Кодовый checkpoint 7b24aa41307ddf5621a60ac9b93fe7406de2237d, codex/visual-refresh. Main не менялась.
-World Lyrics: всегда мировой текст перед действительной камерой, 2.4 блока вперёд и .4 вниз; first person/F5/Free Look, без рамки/HUD-копии/drag fallback. LYRICS enum config key оставлен, shown=false; прежние сохранённые позиции больше не влияют. Native/LRC/manual и тайминги сохранены. END_MAIN + собственный Font BufferSource/endBatch. КРИТИЧНО: Camera.rotation MC1.21.11 включает PI-yaw; glyph pose.scale(+s,-s,+s). Старый отрицательный X разворачивал лицевую сторону: вызовы рисования были, букв в framebuffer не было! Не возвращать минус X и не считать renderedFrames доказательством визуала.
-VisionPresence main/common: Hello(boolean), Peer(UUID,boolean) v1 Fabric payloads; server UUID только из connection, snapshot + join/withdraw/disconnect delta, состояние в памяти сервера. fabric.mod.json environment=*; тот же JAR опционально на Fabric-сервере, без клиентских классов в common. JEI/MezzConfig bundled также запускаются на сервере. На обычном сервере без relay только свой V в TAB, чужие клиенты неизвестны; canSend исключает неизвестные пакеты. Нет внешнего сервиса, чата, расширения/телеметрии/базы игроков. Это объявление клиента, не криптографическая аттестация JAR.
-VisionPresenceClient: actual nameTag + vanilla TAB mixins, styled Component.copy сохраняет исходный nickname/prefix/vanilla visibility. playerBadge во Внешнем виде и профилях; выключение/global OFF отзывает объявление, disconnect очищает peers. Приём ограничен4096 UUID. Собственный клиент известен локально; чужие только от сервера.
-CI7b24aa4: build /43973866955 PASS, client /43973866892 —54 toggles/8 frames PASS, world /43973866991 —LYRICS_PRESENCE/PET_MOTION/CONTROLS/INVENTORY/MENU_MEMORY/WORLDTEST PASS; real public LRCLIB58 timed rows PASS; dedicated Fabric startup Done(3.759s). В настоящем PNG19 тест требует >100 пикселей букв; локально найдено1236 на каждом19/20/21, все3 кадра просмотрены: читаемый текст перед камерой. Игровая управляемая paused media fixture изолирована от Native/HTTP retry через reflection только gametest. Метка проверена реальными server packets self-confirm/withdraw/restore и actual renderer/TAB hooks на нелокальном fixture avatar. Два независимых сетевых клиента, живой аудиотрек, Sodium/Iris и FPS отдельно не проверены.
-JAR4977878 bytes SHA256 8883174efc4cf7112fbcc6632013a2a78ccf974a7bf82fe8a9e4c2bcb1fdc427. Immutable evidence94df4ac251b44bcdda2133f6481bfa44be099b8c/build/visionmod-2.0.0.jar. См. WORLD_LYRICS_BADGE_QA_RU.md. Последующие docs-only commits не меняют JAR. Без браузерных расширений — обязательное требование.
-
-*** 2026-11-17 · ПИТОМЕЦ / F5 · ПРОВЕРЕНО ***
-Запрос: питомец с небольшой плавной задержкой относительно камеры, возвратом, движением вверх/вниз при прыжке; лишний объект в F5 пользователь описал как «Цветная коробка или плашка». Кодовый checkpoint 310fc54330c0e3afafe874ecbcaf6b7beb08a01c, codex/visual-refresh; main не менялась.
-PetMotion: аналитическая критически затухающая пружина угла камеры, facing/tilt и world Y; кратчайший путь через ±180, сглаженная вертикаль подъёма/спуска, reset при телепорте/мире/игроке/OFF/долгом кадре, snap угла при смене CameraType. VisionPetRenderer использует реальную camera yaw, near-camera/depth fade и не запрашивает буфер при нулевой видимости. Сохранять непрерывный один материал, не возвращать Not building через чередование consumers.
-Custom Models: пример Small Backpack ошибочно рисовался спереди. Правильный поворот 180 - Mth.rotLerp(partial, yBodyRotO, yBodyRot), локальный +Z — спина. Не привязывать к углу головы/Free Look. Пользовательские модели не удалялись. Модели и China Hat скрываются при camera-eye distance < .85; Lyrics без музыки/local/manual возвращает пустую строку и не рисует «Нет музыки». Объект пользователя без его кадра не идентифицирован окончательно; исправлены реальные подходящие причины.
-Локально 288 core +259 pet motion +16 source +8 HTTP fixture +mesh PASS. CI310fc54: build /43967466043 PASS, client /43967466175 (54 toggles /8 editors) PASS, world /43967466401 PET_MOTION/CONTROLS/INVENTORY/MENU_MEMORY/WORLDTEST PASS, public LRCLIB58 timed rows PASS. Реальные framebuffer12/14/16/17/18 просмотрены; рюкзак сзади, питомец в кадре, при wall-camera декор не рисуется. Sodium/Iris и живой аудиотрек отдельно не тестировались.
-JAR4968211 bytes, SHA256 9457e8187e982726ee2e09b4045eb465e33fd07216c8ae38f70f85fa1942d791. Immutable evidence ccbd3ca7c290bbabfa02c3f87b50c0b966d3c563/build/visionmod-2.0.0.jar. См. PET_FOLLOW_AND_F5_QA_RU.md. Последующие doc-only commits не требуют нового JAR. ЧИСТЫЙ МОД БЕЗ РАСШИРЕНИЙ остаётся обязательным.
-
-*** 2026-11-17 · FAST SCROLLER / ПАМЯТЬ GUI · ПРОВЕРЕНО ***
-Последний запрос: Fast Scroller не работает; меню должно возвращаться туда, где закрыли, в текущем запуске Minecraft. Всё сделано в codex/visual-refresh; кодовый checkpoint cf3722fa5e5bc7a9574e33f9efdb59acd00d217c, дальнейшие правки документации не меняют JAR.
-VisionFastScroller: Fabric screen events обычных контейнеров, Shift + колесо и Shift + ЛКМ/проведение по слотам через QUICK_MOVE. Первый Shift-клик обрабатывается самим модулем, press/release хранится как состояние GUI: MouseHandler.isLeftPressed — игровой attack-флаг, в GUI ложен; на нём функцию не строить. Дубликаты жеста ограничены visited slots. Изначальная неисправная функция прыгала на3 хотбар-слота и полностью исключала открытый инвентарь; это удалено из MouseExtrasMixin.
-ContainerScreenAccess использует реальный isHovering(Slot,double,double), leftPos/topPos; getSlotAt — имя из других mappings, не применять в Mojang1.21.11 (реальный finder называется getHoveredSlot). Клиентский startup ловит отсутствие invoker, не ослаблять require/проверки.
-VisionMenuSession: последние dashboard/editor instances только в памяти процесса; Right Shift закрывает в игру и возвращает тот же экран. bind.matches уважает настройку клавиши. Подавление повторного consumeClick на закрывающем событии предотвращает моментальное переоткрытие. Dashboard.init сохраняет query, filtered не сбрасывает page, дочерние панели возвращают Session.dashboard, Options.page остаётся в instance; resize clamped. Прицел завершает штрих на removed, Profiles сохраняет draft имени.
-CI cf3722f: build /43952707594 PASS; world /43952707588 — INVENTORY, MENU_MEMORY, CONTROLS, WORLDTEST PASS; client /43952707590 —8 непустых editor frames PASS; public LRCLIB58 timed rows PASS. Inventory тест проверяет серверные числа32stone/16dirt/8apple, обе стороны, modifier/OFF/cursor/full chest. Fixture размещает обратный клик вне250ms double-click окна; не спутать vanilla collection с потерей предметов.
-Новый JAR SHA256 6c40f0d474f22ade7e7fb39f94e39d2b513311fb1335f56038471c1b5b716dd5, 4963384 bytes. Immutable evidence commit def2648162c45c1ed45bfa4930768b187cfca459/build/visionmod-2.0.0.jar. См. SCROLLER_MENU_SESSION_QA_RU.md. Main не перезаписывалась. Креативный каталог не перехватывается.
-
-*** 2026-11-16 · FREE LOOK / HOTBAR / SYNCED LYRICS ***
-Последний запрос: Lyrics должны идти в темп песни, плавный хотбар, Free Look не работает пять дней. Кодовый checkpoint abad564, codex/visual-refresh.
-КОРЕНЬ FREE LOOK ДОКАЗАН по bytecode MC1.21.11: ordinal0/setRotation только для interpolated minecart; обычная камера использует второй вызов. Удалён ordinal, require2; не возвращать ordinal0. Реальный client test Alt/mouse/camera/player aim/release/front/F5/menu/rebind PASS /43940033956.
-HotbarTween + SmoothHotbarMixin: 140 ms, настоящий слот сразу; Appearance.smoothHotbar, профиль. Реальный hook/number7/end-position/OFF PASS.
-ДОПОЛНЕНИЕ: 38e243d /43940888313 повторный WORLD+CONTROLS PASS и LIVE_LYRICS PASS: production lookup получил58 timed rows от настоящего публичного LRCLIB. Core/MPRIS повторно283 +16source +8HTTP fixture +mesh PASS. Это не запуск живой музыки. Build38e /43940888278 PASS. Изменений production-кода после abad564 нет, добавлены только live probe и QA docs.
-LyricsSearch exact/search fallback, нормализация/длительность; native rate/duration/positionKnown/capture timestamp, опрос 500 ms, пустые LRC-паузы, local LRC на media clock, generation cancellation. 280 core +16 source +8 HTTP fixture +mesh PASS. Windows /43940033959 и build /43940034016 PASS. LiveLyricsSmoke отдельно проверяет public LRCLIB; смотреть lyrics-live.log, не путать с реальной музыкой.
-См. CONTROLS_LYRICS_QA_RU.md. После восстановления среды был старый work/main; рабочая ветка получена fetch/switch. Локальный JDK снова /workspace/.visionmod-tools/jdk21. Не выдавать старые JAR до фикса камеры.
-
-*** 2026-11-16 · АКТУАЛЬНОЕ ПРОДОЛЖЕНИЕ ***
-Пользователь просит автономно улучшить внешний вид всех функций и исправлять баги. Обязательное уточнение: ЧИСТЫЙ МОД БЕЗ БРАУЗЕРНЫХ РАСШИРЕНИЙ. Не восстанавливать browser-extension, pairing/token/HTTP bridge из истории ниже.
-Работа в codex/visual-refresh, main не перезаписана. Версия2.0.0, MC1.21.11/Fabric/Java21; репозиторий исторически называется1.0.0.
-Код: общий HUD/адаптивные редакторы/HSV, Pet/Trails/Hat/Jump/ESP, мягкие частицы, actual block shape, profiles всех новых настроек, 12 перемещаемых HUD, три звуковых пресета. SystemMediaReader: Windows native Media Control/PowerShell, Linux MPRIS/gdbus. LRCLIB async/200kB/24tracks/cancel, immutable LRC timeline. macOS auto lyrics нет.
-Критичный новый фикс: мировой рендер перенесён с BEFORE_DEBUG_RENDER (вне текущего main pass) на AFTER_ENTITIES. Предыдущий world smoke d862eed не падал, но картинки выявили невидимые эффекты. Нельзя считать отсутствие исключения доказательством отрисовки. Тест усилен счётчиками реально отправленных кадров, видами с F1 и проверкой приземления. Default HUD packing избегает пересечений, drag-позиции сохраняют приоритет.
-Локальные тесты: 271 core, 12 lyric source, CPU mesh checks PASS. MPRIS274 core +12source +mesh PASS. JavaParser80/81 файлов проверяет только синтаксис. Тестовые stubs не заменяют Minecraft type-check.
-CI работает через обычный push: build, client-smoke (54 toggles +8 непустых framebuffer PNG), native Windows smoke, integrated world. Точный SHA/run у каждого набора в source.json ветки codex/visual-evidence. Эта ветка только для выводов CI; не мешать с рабочей. Снимки root Xvfb были чёрными и заменены Screenshot.grab Minecraft. Редакторы7a0ecf4 просмотрены.
-Подтверждённый Windows26c3237 https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43901873279 PASS (ответ API и close, не живая песня). Сборка26c3237 /43901873304 и smoke /43901873339 PASS. World250eac9 /43904228036 PASS: реальные Pet/Hat/Trails/landing/particles видны,197pet/197world/104custom frames, OFF останавливает счётчики. Build /43904227806 и smoke /43904227811 того же SHA PASS. В финальной полировке пустой Social Radar свёрнут в компактный badge. Более поздние результаты сверять по evidence/Actions, старые SHA не считать последними.
-Инструменты: JDK /workspace/.visionmod-tools/jdk21, Gradle9.7.1, GRADLE_USER_HOME /workspace/.visionmod-tools/gradle-home, Gsonjar /workspace/.visionmod-tools/test-deps/gson.jar. Полная локальная Fabric-сборка блокируется CONNECT403, штатный remote CI собирает. Git HTTPS fetch/push доступен с платформенной авторизацией, gh API запрещён; не извлекать токены и не обходить сеть. Черновик setup сохранён; публикация конфигурации отдельно от draft save.
-См. VISUAL_REFRESH_RU.md и NATIVE_LYRICS_QA_RU.md. Не утверждать «все баги устранены», полную приёмку35пунктов, реальный Motion Blur, импорт OGG, FPS gain, совместимость Sodium/Iris или проверку синхронизации живого Spotify без соответствующих результатов.
-
---- ИСТОРИЧЕСКИЕ ЗАПИСИ (могут противоречить текущему коду) ---
-
-*** ПОСЛЕДНЕЕ УТОЧНЕНИЕ / 2026-11-15: БРАУЗЕРНОЕ РАСШИРЕНИЕ, КРИТИЧНЫЙ FIX ***
-При распаковке первичного extension artifact Build #257 обнаружена настоящая функциональная ошибка: background.js определял адрес только из sender.tab?.url (без tabs permission может отсутствовать), а regexp не включал music.youtube.com. Это устранили в SHA 60dd38ef552eb94d5b76789a69cf28f0eb5ca871: теперь sender.url || sender.tab?.url, разрешены ровно https://open.spotify.com, soundcloud.com, www.soundcloud.com, music.youtube.com. Проверено ОТДЕЛЬНО локальным Node VM тестом с подменённым chrome runtime и fetch: все 3 сайта разрешены, чужой example.com отклонён, 3 авторизованных POST вызова. Node --check все JS PASS.
-ДЕЙСТВИТЕЛЬНО АКТУАЛЬНЫЙ EXTERNSION ARTIFACT: GitHub Build #262 https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43726727370 SUCCESS; artifact id 14167295505, name VisionMod-Browser-Music-Extension, size 7171. В ответе file sandbox:/mnt/data/VisionMod-Browser-Music-Extension-v2.zip (путь только для этого сеанса). Проверен ZIP CRC, regexp and manifest. JAR code после #257 не изменялся, jar из #257 валиден.
-Не выдавать старый #257 extension ZIP из GitHub за верную версию (там была ошибка доверенного URL). Для установки использовать ZIP из Build #262 или непосредственно новую папку browser-extension из main.
-
----
-*** 2026-11-15 / РАБОТА ПОСЛЕ ЖАЛОБЫ: PET CRASH, CHINA HAT / TRAILS INVISIBLE, BROWSER MUSIC ***
-Пользователь сообщил: после загрузки питомца Minecraft вылетает; China Hat и Trails не работают; музыка играет в ОБЫЧНОМ БРАУЗЕРЕ (Spotify / SoundCloud / etc), а World Lyrics не показывает слова. Приоритет пользователя — прежде всего убрать CRASH питомца. Отдельного нового crash-report от этой попытки НЕ ПОЛУЧЕНО, поэтому точная цепочка вызовов не доказана. Был предыдущий реально подтвержденный crash в VisionWorldEffects (Not building!).
-
-В ЭТОМ СЕАНСЕ ИСПРАВЛЕНО В ИСХОДНИКАХ:
-1. VisionPetRenderer.java: прежнее переключение трёх RenderTypes при рисовании одной модели заменено на ОДИН буфер entityTranslucent(VisionGeometry.PET_FUR) и одну текстуру для всех поверхностей/ореола. PoseStack pushPose всегда уравновешен popPose в finally. Если сторонний render pipeline бросит RuntimeException, рендер Pet временно отключается, в latest.log будет [VisionMod][PET], НЕ должен падать клиент; повторное переключение Pet сбрасывает флаг ошибки (VisionExtendedFeatures.toggle). Это смягчение опасности, не гарантия устранения конкретного crash без лога.
-2. VisionCustomModels.java: при загрузке пользовательского custom-model.json ограничение 64 KiB; в rendering try/catch/finally и отключение при сбое; setEnabled повторно включает. Для случая, когда под «загрузил питомца» имелась в виду своя модель.
-3. VisionWorldEffects.java: China Hat прежние ВЫРОЖДЕННЫЕ quads, где дважды указывалась одна и та же вершина apex, заменены реальными 4-вершинными полосами внутреннего/внешнего обода. 36 секторов, прорисовка обеих сторон при возможном face culling. Trails приподняты с .065 до .15 блока, чтобы не скрывались terrain z-fighting, сохранили RGB/HEX, gradient/rainbow/solid. При RuntimeException WORLD FX отключают рисование на время и пишут [VisionMod][WORLD FX]; сброс при смене мира или переключении. Trail и Hat нужно проверять В ТРЕТЬЕМ ЛИЦЕ F5, т.к. они позади игрока/на его голове.
-4. VisionBrowserMusicBridge.java + VisionLyricsSource.java: защищённый локальный HTTP bridge на 127.0.0.1:38567 (НЕ внешняя сеть), 128-bit случайный pairing token из config/visionmod/browser-bridge.properties. Запуск только когда включён World Lyrics; Chrome/Edge MV3 extension в browser-extension/ передаёт только track title/artist/positionMs/paused из Spotify Web, SoundCloud, YouTube Music; без паролей/cookies/звука. Java по новой песне асинхронно запросит syncedLyrics LRCLIB https://lrclib.net/api/get по artist_name/track_name, с таймаутом и лимитом >15 секунд между запросами. Если данных/lyrics нет — World Lyrics должен показывать «♪ song — artist», не пустую строку. Прямое проигрывание музыки не меняется; требуется ОТДЕЛЬНАЯ УСТАНОВКА расширения и вставка ключа. Браузерной автоматизации/загрузки настоящей песни не было протестировано в live Chrome+Minecraft, DOM selectors могут требовать доработки при обновлении сайтов.
-5. browser-extension/manifest.json,background.js,content.js,options.html,options.js,README_RU.md: Chrome/Edge unpacked extension. С 2026-11-15 поддерживает Spotify/SoundCloud/YouTube Music. Формат установки см. PET_TRAILS_BROWSER_LYRICS_QA_RU.md. Browser extension архив отдельно в GitHub Actions; его можно скачать из текущего сеанса как VisionMod-Browser-Music-Extension.zip.
-6. Build workflow .github/workflows/build.yml теперь проверяет node --check трёх JS + manifest JSON и при SUCCESS загружает ДВА артефакта VisionMod-2.0.0 и VisionMod-Browser-Music-Extension.
-7. SelfTest ранее проверял 54 toggle/config + source LRC; дополнен runtime проверкой token + fake timed browser lyrics, БЕЗ реального браузера/сети. 
-ПРОВЕРЕННОЕ:
-- Последняя кодовая/CI версия build #257 SUCCESS (run https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43726155375), source после последнего изменения .java в commit dace547d9ee1c119199843094f5969864780bf1b. Build workflow #257 SHA 26bb92df07efaaa33c20d05ae772665110a5c3c4. 
-- Client startup smoke #122 SUCCESS https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43726136874: Minecraft 1.21.11 Xvfb дошёл до reload ResourceManager, run 100 seconds, 54 toggle tests PASS. НЕ проверено реальное включение Pet, World FX, F5, работа шейдеров/Iris, браузер или FPS.
-- JAR извлечён из build #257, path только В ЭТОМ СЕАНСЕ /mnt/data/VisionMod-2.0.0-Pet-Trails-Lyrics-Fix.jar, размер 4,907,256, SHA256 0a1b363eef64744f1515329321b77b1279e606544678bae69073094aa403ba2f, jar metadata версия 2.0.0, все новые классы и pet_fur PNG проверены; zip целый.
-- Дополнительный артефакт #257 VisionMod-Browser-Music-Extension.zip, 7083 bytes, содержит корневые manifest.json, background.js, content.js, options.js, options.html и README_RU.md; Integrity ZIP проверена.
-НЕ НАДО обещать пользователю «всё точно исправлено». Если Pet всё ещё крашит, запросить crash report + latest.log именно свежего теста на последней JAR и включенных Sodium/Iris; их раньше не было. Невозможно ответственно гарантировать 80% на каждой из 35 функций без тестов настоящего игрового рендера.
-ЗАДАЧА СЛЕДУЮЩЕГО ЧАТА: реальные игровые тесты Pet/China Hat/Trails, проверка browser bridge в Chrome, решить замечания, FPS и ещё не готовые модули по QA_35_QUALITY_GATE_RU.md. При «=» продолжать с текущего HEAD, читать этот FOR_AI, последние Actions, не удалять реальные исправления и не возвышать CI до игровой проверки.
-
-
----
-
-*** 2026-11-15 / НОВЫЕ ЗАДАЧИ: HUD ПЕРЕТАСКИВАЕТСЯ ЧЕРЕЗ ЧАТ, WORLD LYRICS НЕ ЗНАЕТ ИГРАЮЩУЮ ПЕСНЮ ***
-Пользователь потребовал: «сделай так что бы можно было открыв чат курсором можно было двигать любой виджет, а то не удобно. + ворлд риликс не работает, музыка играет а текста нет».
-РЕАЛИЗОВАНО В ИСХОДНИКАХ:
-- VisionHudLayout.java: на обычном ChatScreen добавляются Fabric ScreenEvents.afterRender и ScreenMouseEvents.allowMouseClick/Drag/Release. При открытом чате видны рамки включённых HUD-панелей, ЛКМ захватывает панель и перетаскивает, ПКМ сбрасывает её позицию, Esc закрывает чат. Вне панелей стандартный ввод и клики чата не перехватываются. Позиции всех 11 экранных виджетов (CPS, Food & Saturation, Armor HUD, Shulker HUD, Armor Colorful, Target Health/Hit Range, TNT Indicator, Arrow Names, World Lyrics, Kill Effect, TAB Heads) сохраняются как относительные координаты в config/visionmod/hud-layout.properties. Crosshair не перемещается: клиентская рисованная точка должна соответствовать фактическому направлению прицеливания; а 3D world FX и ванильный чат не являются HUD-панелями.
-- VisionExtras / VisionFeaturePack / VisionTabHeads / VisionExtendedFeatures / VisionWorldLyrics стали учитывать координаты VisionHudLayout; большинство HUD-панелей рендерятся и при ChatScreen. World Lyrics, если пользователь переместил его в чате, переходит из world 3D в перемещаемый HUD и не дублируется.
-- VisionLyricsSource.java: опциональные собственные строки в config/visionmod/lyrics.lrc; парсит [mm:ss.xx] текст до 1200 строк, проверяет файл не чаще 1 раза/с и максимум 128 KiB; новая запись файла перезапускает локальный таймер. Если файла нет — старые собственные строки из меню с разделителем |. Опции и источник видны в World Lyrics detail. ВАЖНО: НЕ СУЩЕСТВУЕТ прямой интеграции Spotify/Яндекс Музыки/браузера или доступа к названию/таймкоду воспроизведения: музыка играет — автоматически распознать песню и строки мод пока не может. Для полного решения спросить пользователя, ГДЕ играет музыка, затем реализовать конкретный player bridge, не обещать синхронизацию без API.
-- VisionSelfTest: проверка LRC parsing и геометрии 11 HUD хитбоксов; в отдельном README HUD_DRAG_AND_LYRICS_RU.md — инструкция и ограничения.
-КОНКРЕТНЫЕ ПРОВЕРКИ: последний кодовый SHA 584e93aacada85d564d67fbaf3d022f518548e43; Actions Build #228 https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43724039224 SUCCESS, client smoke #109 https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43724039269 SUCCESS; документ-only commit 0a8c54e9 и Build #229 SUCCESS. Артефакт #228 извлечён: visionmod-2.0.0.jar размер 4,896,788 bytes, SHA256 9fdb5c61292ac0733173efc3171922d1a7af0fafc598c2ea943267936fdb0512. Вложенные JEI/MezzConfig; классы VisionHudLayout/VisionLyricsSource присутствуют.
-ПОКА НЕ ПРОВЕРЕНО: мышиное перетаскивание физически в мире, работа ChatScreen с сторонними UI модами, сохранение при других GUI scale, реальная синхронизация с плеером, FPS. CI компилирует и запускает Minecraft в Xvfb, но сам чат не открывает. Сказать честно при выдаче.
-При "=" продолжать настоящие исправления, начать с автоматической музыкальной интеграции после определения плеера или непроверенных пунктов FEATURE_REQUESTS_2_0_0.md, QA_35_QUALITY_GATE_RU.md. Не рекламировать 35 готовых функций.
-
-
-*** ОБНОВЛЕНИЕ 2026-11-15 / СООБЩЕНИЕ ТЕСТЕРА — TRAILS + AIR HEARTS + TAB HEADS + PET + ITEM PHYSICS ***
-Пользователь получил сообщение тестера: «след за игроком нужна кастомизация цвета, air hearts отрисовываются верх ногами, хочется видеть tab head, добавить текстуру пету, исправить физику предметов; трейл странный, но меня всё устраивает — главное RGB/градиент кастомизация». Приоритет: настройки трейла, не переписывать пользовательский визуал без нужды. Работа выполнена в репо De1po3oN/VisionMod-1.0.0 (main) Minecraft 1.21.11 Fabric, версия пока 2.0.0. Пожалуйста, НЕ утверждать, что каждый эффект проверен в реальном мире.
-
-ЧТО КОНКРЕТНО СДЕЛАНО:
-1) VisionWorldEffects.java: добавлены trail.start/ trail.end RGB, режим 0 SOLID / 1 GRADIENT / 2 RAINBOW, циклы width/opacity и 6 готовых сочетаний (через GUI). Поддерживается #RRGGBB, RRGGBB и decimal R,G,B. Конфиг visionmod/world-effects-2.properties; градиент вычисляется вдоль длины ленты, вместо псевдослучайных цветовых прыжков; сквозной гигантский trail через телепортацию обрывается, перерисовка идёт сначала fill, потом lines, чтобы не ловить Not building! в ImmediateBufferSource.
-2) VisionTrailSettingsScreen.java: отдельный экран редактирования с 2 EditBox, цветной preview, SOLID/GRADIENT/RAINBOW, WIDTH/ALPHA, NEXT PALETTE, BACK, сохранение без отдельной кнопки. Right Shift -> WORLD FX -> Trails -> RMB -> OPTIONS. Возврат к VisionDashboardScreen. Неверный цвет не заменяет сохраненный.
-3) VisionAmbientParticles.java: исправлена ориентация обеих texture UV! world +Y верх должен соответствовать v=0, нижняя грань v=1. Изображение Air Hearts более не вверх ногами по математике UV. Обязательно сверить глазами в Minecraft.
-4) VisionTabHeads.java: отдельный toggle HUD -> Tab Heads; при удержании TAB показывает до 12 игроковых skin head portrait + никнеймы в компактной дополнительной панели слева. Не перезаписывает ванильный Tab и не меняет отображение самого сервера. Использует реальные skin cache через PlayerFaceRenderer.draw, не добывает их отдельными HTTP-запросами. Config visionmod/tab-heads.properties. В Minecraft 1.21.11 GameProfile record accessor .name() вместо отсутствующего .getName(), ошибка компиляции поймана и исправлена.
-5) Pet: добавлена самостоятельная 64x64 RGBA с узорами paw+stars assets/visionmod/textures/entity/pet_fur.png; используется только на голове/теле/ушах/хвосте через VisionGeometry.PET_FUR, лицо и глаза — отдельный material. Ресурс можно заменить resource pack-ом. КРИТИЧНО: чтобы не получить новый Not building!, VisionPetRenderer рисует весь pet_fur ПЕРЕД pet_surface, затем line aura последним; никогда не переключает обратно к старому VertexConsumer после getBuffer другого RenderType.
-6) Item Physics: вместо общей неправильной матрицы X=88° для всего добавлены VisionItemPhysicsState и VisionItemRenderStateMixin; ItemEntityRenderer.extractRenderState записывает onGround + speed в RenderState, при падении предмет мягко кувыркается, при покое лежит плоско; коллизии и движение сервера НЕ изменяются. Миксины require=1. Тестирует state accessor в CI.
-
-ПРОВЕРКИ:
-- Сборка GitHub #212 SUCCESS https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43722361734; Startup Smoke #96 SUCCESS https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43722361744; код SHA d1362e3b7823ee5c56aac7684c27fa277efedc1d. В логе smoke есть PASS для 54 старых toggle, Trail HEX/RGB/gradient config, Tab Heads toggle, PNG pet_fur 64x64, item-ground/air metadata Mixin.
-- JAR извлечён из Actions #212: visionmod-2.0.0.jar, размер 4 881 128 байт, SHA256 6e1e56a68d4f1d3abae08dd2130d250fe9c100a9dfa60e3e785f810944bdb3db, nested JEI + mezz_config; новые классы внутри, текстура читается через PIL. Дальнейшие коммиты МОГУТ менять актуальный SHA: сверяй свежие Actions и не выдавай старый артефакт за новый.
-- В тот же день был реальный crash тестера «Not building!» в VisionWorldEffects.render Target ESP на Purpur и Sodium: root cause смешивание VertexConsumer для lines/fill; исправлено в SHA 75cbbaad и 0eb853b6. При рендере питомца отдельный PET_FUR buffer мог вернуть эту ошибку — исправлено batching SHA 6cff3d766. Нельзя заявлять 100% отсутствие крашей без запуска игрового мира с активными Target ESP + Trails + Pet + Snow/Hearts одновременно.
-- Более поздний коммит 7da75fe7... перенёс World Lyrics первого лица из центра/прицела в верхний правый угол. Внимание к новым Actions #213 / Smoke #97 и далее.
-- Кандидат на игровую приемку, НЕ сертифицированные 80% на каждую функцию. Нужно проверить Item Physics с flat item, block, sword; текстуру Pet в F5; TAB на 50+ игроках; Air Hearts orientation; Trail gradient/rapid sprint/teleport/Sodium/Iris и замер FPS 1% low.
-
-Дополнительная отдельная QA инструкция в TRAIL_CUSTOMIZATION_QA_RU.md. Пользователь не хочет, чтобы мы преподносили успешный CI как подтверждение визуала. При «=» — продолжать с текущего HEAD и исправлять только реальные баги с ручным игровым тестом/логами, не вводить имитационные кнопки.
-
-
----
-
-*** CRASH REPORT / 2026-11-15 / НЕ СТАРАЯ ПРОБЛЕМА, ПРОВЕРЕННОЕ ИСПРАВЛЕНИЕ ***
-Пользователь прислал crash-2026-11-15_16.53.59-client.txt, в нём НЕ гипотетический вылет: IllegalStateException "Not building!" на render thread в VisionWorldEffects.lambda$init$0 (строка 88 в JAR тестера) при ShapeRenderer.renderShape (Target ESP). Игра Minecraft 1.21.11/Fabric, многомодовая клиентская сборка, 13 игроков на Purpur-сервере, Sodium + внешний Freelook + др. Место ошибки однозначно наше. Причина в том, что WorldRenderEvents BEFORE_DEBUG_RENDER использует общий ImmediateBufferSource: прежний код запрашивал линию RenderTypes.lines(), затем fill RenderTypes.entityTranslucent() и продолжал писать в уже закрытый line VertexConsumer. Решение: VisionWorldEffects: все translucent filled quads сначала, единичный getBuffer(lines) только ПОСЛЕ всех заполнений, все outline/ring/ShapeRenderer.draw в конце callback; код SHA 75cbbaad... Это также устраняет межчередование fill/line трейла. В VisionAmbientParticles тоже обнаружены два getBuffer для HEART/SNOW перед попеременной отрисовкой, потенциально тот же Not building; исправлено в SHA 0eb853b6... группировкой по спрайтам, getBuffer каждого только перед собственным непрерывным проходом.
-Сборка сперва проваливалась из-за VisionTabHeads.java:49: GameProfile.getName() в 1.21.11 отсутствует, исправлено на getProfile().name() (SHA bd6c325a2a0817db15a328413905ecff77df2605).
-ПОДТВЕРЖДЕНО НА SHA bd6c325a: GitHub Actions Build #207 SUCCESS https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43721747841; startup smoke #93 SUCCESS https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43721747874, дошёл до Minecraft ResourceManager и провёл стандартный selftest. JAR фактически скачан в разговор, извлечён из ZIP, проверен. Размер 4,879,669 байт SHA256 4324bf286150a3a08b35ac45518192e9834e9857c094c8c7eebe4a366c4737da, basename VisionMod-2.0.0-Render-Crash-Fix.jar. Содержит Trail Settings, Tab Heads и исправленные FX.
-ВАЖНО: headless smoke не входил в мир и НЕ проверил реальную отрисовку на внешнем Purpur/на сборке тестера. Нельзя гарантировать, что именно этот crash полностью исключён, пока не испытан в реальном мире. Temporary workaround для старого JAR: выключить Target ESP. Перед выдачей окончательной версии проверить оффлайн + серверный рендер Target ESP, Trails, Jump Circles, China Hat, Air Hearts/Snowflakes одновременно и с Sodium.
-Предыдущий запрос тестера: Trail RGB/HEX/градиент/Rainbow, Air Hearts upside-down, TAB heads, текстура Pet, item physics. В том же JAR существуют Trail Settings Screen и обновлённые Trail colors + face-UV Air Hearts + TAB Head, но визуальные результаты ещё не протестированы. Питомец/Item Physics по-прежнему нуждаются в отдельном gameplay QA. Не выдавать эти пункты за полностью закрытые.
-При следующем "=" или жалобе сначала читать эту запись и свежие Actions, НЕ затирать причину Not building!, тестировать все эффекты и продолжать непройденные игровые проверки.
-
-
-*** 2026-11-14 / ПОСЛЕДНЯЯ ЗАДАЧА: AIR HEARTS ДОЛЖНЫ БЫТЬ СВОИМИ И ПАДАТЬ КАК СНЕГ ***
-Пользователь послал «=», что означает ПРОДОЛЖАТЬ VisionMod без уточнения; последнее конкретное требование: «сердечки должны быть не с майнкрафта, а как снег». Выполнен самостоятельный исправленный рендер в рамках 2.0.0.
-
-ДОКАЗАННОЕ СОСТОЯНИЕ КОДА:
-- Базовый SHA новой логики + корректных PNG = 2fb73ac4f0dc4f151dcb70fd76061f61f23bef76 (после него только QA/документы). Кодовый GitHub Actions Build #186: https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43639725724 — SUCCESS, а smoke test #76: https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43639725726 — SUCCESS. Документ-only Build #187 тоже SUCCESS.
-- JAR физически скачан из Build #186, распакован и локально проверен: `visionmod-2.0.0.jar`, размер 4,864,435 bytes, SHA256 d32f360af12d94f7869f1780937b19af508f9d66672bfe581c85aa3a5d1325a9, версия 2.0.0, класс VisionAmbientParticles, оба 64×64 RGBA PNG; оба прочитаны Pillow из реального JAR.
-- РАНЬШЕ обе FX в VisionExtras создавались ванильными ParticleTypes.HEART/SNOWFLAKE. УДАЛЕНО. VisionAmbientParticles.java теперь создаёт и рендерит собственные billboard-спрайты, спускающиеся и качающиеся как снег, fade in/out, bounded 96 одновременно, общая физика, интерполяция, нет сканирования мира и сетевых пакетов, самостоятельные оригинальные текстуры 64×64 в `assets/visionmod/textures/particle/soft_heart.png` и `soft_snow.png`.
-- Старые переключатели snow/hearts, ambientStyle WORLD/CAMERA и ambientDensity LOW/MEDIUM/HIGH сохранены в config/visionmod/extras.properties. При глобальном End, смене мира или отключении отдельных типов спрайты очищаются. MAX FPS не должен скрывать явно выбранные FX, старый Vanilla ParticleEngine больше не использует ambient marker.
-- VisionSelfTest при VISIONMOD_SELFTEST=1 проверяет 54 toggle+config persistence, пакетные PNG через Java ImageIO и прозрачность, жёсткий лимит 96 спрайтов и cleanup. Startup smoke #76 прошёл эти тесты; клиент дошёл до ResourceManager и работал до timeout без fatal exception.
-- Был реально пойман баг ПОСЛЕ первого upload PNG: startup smoke #75 FAILED из-за `IIOException: Invalid chunk length` в PNG. Это НЕ пропущено: оба PNG перегенерированы программно как стандартизированный RGBA8 PNG (без палитры) и повторный smoke #76 SUCCESS.
-- Сырой JAR в текущем диалоге доступен как `/mnt/data/VisionMod-2.0.0-Soft-Hearts.jar` (не предполагать тот же path в следующих чатах!). В будущем брать свежие Actions артефакты.
-- Новый документ `AMBIENT_HEARTS_QA_RU.md` содержит точный сценарий визуальных тестов.
-
-ОБЯЗАТЕЛЬНАЯ ОГОВОРКА: компиляция + автозагрузка Minecraft НЕ подтверждают реальную отрисовку спрайтов в игровом мире, FPS или совместимость Iris/Sodium. Эти тесты сделать и честно зафиксировать, прежде чем объявить Air Hearts полностью исправленными. Не утверждать проценты доверия без тестов. Остальные 35 функций 2.0.0 всё ещё не все готовы. НЕ переносить чужие исходники/ассеты закрытого Fading Light.
-При новом «=» продолжать с актуального HEAD, сверить Actions, проверить Air Hearts в мире, затем брать следующие незакрытые функции из `FEATURE_REQUESTS_2_0_0.md` и `QA_35_QUALITY_GATE_RU.md`, не выдавать пустые кнопки за готовые модули.
-
-*** АКТУАЛЬНО: 2026-11-14 / ПЕРЕДЕЛКА ВИЗУАЛОВ 2.0.0 ПО ЖАЛОБЕ ПОЛЬЗОВАТЕЛЯ ***
-Пользователь сообщил: прежние визуалы и Pet выглядели ужасно; World Lyrics не работал, и попросил визуальный паритет с предоставленным Fading Light 2.0.0. Реальный reference JAR fading-beta-2.0.0-fabric.jar доступен в текущей разговорной среде, содержит шейдеры для lyrics/circles, но лицензия All-Rights-Reserved: НЕ копировать байткод/код/текстуры/шейдеры/звуки из чужого мода. Пользователь ценит реальный внешний вид и работоспособность, а не число кнопок и успех Gradle.
-Последний ПРОВЕРЕННЫЙ КОДОВЫЙ SHA: 53bb7c4cf8832ecef4db0f64d29ee9e245406875.
-GitHub Build #171 https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43614077239 — SUCCESS, artifact id 14121576853. Клиентский smoke #66 https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43614077274 — SUCCESS (в т.ч. 54 переключателя, проверка цикла World Lyrics и нового PNG). JAR физически скачан и исследован: visionmod-2.0.0.jar 4 852 193 bytes, SHA256 f4c483760fb64a16a030b2dbb419f2849653a1d7ef8c51d5e94b430dd24ed7e4; metadata id=visionmod version=2.0.0; pet_surface PNG 895 байт, классы VisionGeometry, VisionPetRenderer, VisionWorldLyrics, вложенные JEI и MezzConfig.
-КЛЮЧЕВЫЕ ИЗМЕНЕНИЯ:
-- VisionGeometry.java: самописные bounded заполненные четырехугольники/кубы/плавные линии, единый original texture `assets/visionmod/textures/entity/pet_surface.png` (не скопирован).
-- VisionPetRenderer.java: отдельный локальный 3D-питомец pastel fox/cat, закрашенный (не каркасный): глаза, морда, ушки, лапы, анимированные хвост/крылья и bob; 6 меняемых палитр через RMB Local Pet -> OPTIONS, сохраняется в extended-2.properties. Декорация локальная: другие игроки её не видят.
-- VisionWorldEffects.java: Trails = исчезающая цветная полупрозрачная ленточка до 25 точек вместо 13 разрозненных VoxelShape; Jump Circles — расширяющаяся заполненная кольцевая лента и второй контур; China Hat — заполненный конус из 36 секторов/ободок вместо 54 проволочных квадратиков; Target ESP — outline + ground ring.
-- VisionWorldLyrics.java: прежний пустой fixed HUD-проект заменён на анимированные собственные строки (через |), меняются каждые 70 тиков; в третьем лице реальный 3D billboard `Font.drawInBatch` в WorldRenderEvents.BEFORE_DEBUG_RENDER; в первом лице видимая аккуратная HUD панель, fallback при offscreen; пустое начальное значение заменяется sample `YOUR WORLD | YOUR STORY` (или fallback). НЕ интегрировано с Spotify/YouTube, нельзя утверждать, что автоматически показывает песни. В новом GUI по ПКМ редактируются lyric lines.
-- VisionCustomModels.java: JSON модели теперь filled 3D surfaces, а не каркас; max 32 boxes, только клиент и собственный JSON.
-- VisionExtendedFeatures.java: Block Overlay = полупрозрачный заполненный блок+контур, World Color = градиент теплый/холодный/сумерки.
-- VisionFeaturePack.java: Hit Pulse = вынесенные анимированные угловые метки, Blood Hit = bounded многослойная виньетка.
-- VisionSelfTest.java: добавлены smoke-проверки lyric line rotation и загрузки 32x32 исходного pet_surface.png.
-- Новое руководство VISUALS_REWORK_QA_RU.md и обновленная таблица FEATURE_REQUESTS_2_0_0.md. Все 35 модулей ещё нужны, НЕТ точной копии референса; прежние недоделки Motion Blur/ItemPhysics/CustomSound и др. НЕ исправлялись этим изменением.
-КРИТИЧНО: успешный CI/запуск Xvfb без мира НЕ подтверждает реальный визуальный рендер, сравнение с Fading, shaders/Iris/Sodium, FPS или работоспособность каждой из 35 функций >=80%. КАЖДУЮ функцию тестировать в мире и фиксировать ошибки, НЕ переносить на тестеров. При «=» продолжать QA визуальных эффектов, исправлять по скриншотам/latest.log, затем следующие модули, не приписывая неподтвержденные результаты.
-
-*** АКТУАЛЬНОЕ ТЕХНИЧЕСКОЕ СОСТОЯНИЕ / 2026-11-14 / VISIONMOD 2.0.0 ***
-ПОЛЬЗОВАТЕЛЬ КРАЙНЕ НЕДОВОЛЕН ПРЕДЫДУЩИМ КАЧЕСТВОМ: многие новые модули не работают или выглядят плохо. Новый критерий: не меньше ~80% обоснованной уверенности в КАЖДОЙ из 35 функций, не выдумывать цифру. ПОЛНАЯ ПРИЕМКА ПО ВСЕМ 35 ПОКА НЕ ПРОВЕДЕНА: см. QA_35_QUALITY_GATE_RU.md и FEATURE_REQUESTS_2_0_0.md. «Собирается» и «54 переключателя работают» не означает, что поведение/визуал доказаны.
-КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ FREE LOOK: Left Alt ТОЛЬКО НА УДЕРЖАНИИ. При отпускании немедленно сбрасываются yaw/pitch орбиты и ВОССТАНАВЛИВАЕТСЯ ПРЕЖНЯЯ ПЕРСПЕКТИВА. ПОВЕДЕНИЕ «отпустил — угол сохранился» УСТАРЕЛО и запрещено возвращать. Проверка отпускающей клавиши теперь также в Camera.setup mixin каждый кадр, а не только 20 TPS; MouseHandler sync при движении. F5 не требуется.
-В ИСХОДНИКАХ ПОДТВЕРЖДЕНЫ И ИСПРАВЛЕНЫ СЕРЬЁЗНЫЕ БАГИ:
-- ParticleEngineMixin содержал неверные для MC 1.21.11 названия method addParticle(...) и addParticle(Particle). Миксины имели require=0 и ТИХО НЕ ПРИМЕНЯЛИСЬ. При require=1 Minecraft crash #34-39 показал InvalidInjectionException. По реальным 1.21.11 mappings заменены на createParticle(ParticleOptions;DDDDDD):Particle и add(Particle):void, require=1. Затем startup smoke #40 SUCCESS. Аналогично ClientLevelParticlesMixin и SprintParticleMixin теперь require=1 — отсутствующие хуки блоков/спринта вызовут ошибку CI, а не молчаливый ноль результата.
-- VisionParticles: временный маркер для собственных выбранных игроком эффектов (Spear), чтобы MAX FPS/Hide All не удалял их вместе с обычными частицами. У VisionExtras ambient own marker уже был.
-- VisionCombatTracker: AttackEntityCallback + подтверждение client-observed hurt/death пострадавшей цели в течение 60 тиков. Hit Pulse/Blood Hit, Custom Hit Sound, «TARGET DOWN» и Spear Pierce больше не требуют держать существо под прицелом после атаки. Это только CLIENT feedback, не серверно подтверждённый килл. Никаких боевых чит-пакетов/серверных обходов.
-- Spear Lunge: исправлено невозможное для нормального спринта условие horizontalDistanceSqr >0.12 на >0.0075; частицы летят от действительного вектора движения. Spear Pierce получает координаты через tracker.
-- VisionExtras: сердечки/снежинки в первом лице спавнятся в видимом полушарии перед камерой, а не за спиной; плотность 1/2/3, частота имеет ограничение, MAX FPS не должен скрывать их явный выбор.
-- VisionDashboardScreen: старый переход Advanced -> VisionScreen удалён, новые модальные инструменты и встроенная настройка десяти руд/цвета; дочерние редакторы возвращаются в новый dashboard. В детали World Lyrics/Social Radar добавлены редактируемые поля, изменения сохраняются в extended-2.properties. GUI ещё НЕ прошёл визуальный тест.
-- VisionSelfTest.java: CI-only runtime selftest, вызывается при VISIONMOD_SELFTEST=1 из GitHub client-smoke.yml, проверяет реальные toggle+saved config для 54 пунктов: 28 новых модульных переключателей, 16 Extras, 10 руд. Это тест ТОЛЬКО включения/сохранения, не функциональности/вида/FPS.
-
-ПОДТВЕРЖДЁННЫЕ ACTIONS ДЛЯ ЭТОГО КОДА:
-- Build #146 https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43595887218 SUCCESS, SHA e02990db092237dec2597693bc03b83f3acd790f. После этого была правка ТОЛЬКО документации/QA. JAR получен и вскрыт: / build/libs/visionmod-2.0.0.jar, 4 836 778 bytes, SHA256 8da077d47674e6b70ce0d79a58480188005790852d779af4b60fb4d04775d6f9, nested jei 27.54.0.113 and mezz_config 0.6.11; contains FreeLook, VisionCombatTracker, VisionParticles, VisionSelfTest, VisionDashboardScreen.
-- Minecraft startup smoke #45 https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43595887196 SUCCESS, в логе `[VisionMod][SELFTEST] PASS: 54 module toggles and their settings persistence.`. Клиент открылся до ресурсной загрузки/тайм-аута, но НЕТ игрового мира, нажатий клавиш, шейдеров, GUI visual review, FPS measurements.
-- Ранее smoke #34-39 FAILURE из-за наших намеренно усиленных обязательных ParticleEngine injections, которые разоблачили старую ошибку. После исправления smoke #40 и последующие SUCCESS. Предыдущий smoke #44 FAILED ТОЛЬКО из-за устаревшей строки grep «PASS: 28» после расширения до 54, хотя selftest в логе PASS 54; исправлено в #45.
-- При продолжении ВСЕГДА сверять новые коммиты и Actions, SHA выше кодовый контрольный на момент записи, не считать его «навсегда последним».
-
-ОЧЕНЬ ВАЖНО: пользователь потребовал уверенность >=80% ПО КАЖДОМУ ИЗ 35 функциональных модулей. Сейчас такой уверенности нет для большинства, потому что нет реальных игровых тестов и визуального сравнения. НЕ ВЫДАВАТЬ успешный selftest переключателей и запуск за 35 работающих эффектов. Сначала реальные тесты игрового мира (Free Look alt-release, эффектов, FPS и визуала), исправить конкретные FAIL; только затем выпуск. Все 35 сохраняются как scope; не заменять Motion Blur полосками, 3D Pet каркасом и т.д. и не называть пустые кнопки реализованными.
-План при "=": свежие исходники + Actions + все требования, тесты в мире/из доступной среды, исправление настоящих рендеров/механик, проверка до подтвержденного поведения, FPS, обновить этот файл. НИКОГДА не обещать 0 багов или 80% без данных.
-
-
----
-
-*** КРИТИЧНО / FREE LOOK — ПОСЛЕДНЕЕ ИСПРАВЛЕНИЕ, 2026-11-14 ***
-Пользователь жёстко и справедливо сообщил, что GUI всё ещё ведёт в старое меню, многие новые функции 2.0 плохие/не работают, а FREE LOOK не удаётся исправить длительное время. Нельзя снова отчитываться обо всей 2.0 как о готовой. Приоритет — РЕАЛЬНЫЙ тест, воспроизведение, исправление Free Look; затем полный пересмотр 35 модулей и GUI. Не подменять отсутствующие функции похожими заглушками. Старое GUI действительно осталось доступно по ADVANCED, это не окончательное UX-решение.
-На дату записи исправлены три выявленные слабости FREE LOOK:
-- В FreeLookMouseMixin.java перехват `turnPlayer(D)V` теперь `require=1`, а ДО вращения игрока синхронизирует удерживаемую кнопку через `FreeLook.syncFromMouse()`. Раньше активность проверялась только на END_CLIENT_TICK (20 Гц), что позволяло пропускать первое движение до тика.
-- В FreeLookCameraMixin.java перехват Camera.setup->setRotation(FF) теперь require=1 вместо require=0: если хук исчезнет из новых версий Minecraft, клиентский smoke ловит ошибку, а не тихий отказ.
-- В FreeLook.java добавлен persist-enabled setter: выключение возвращает перспективу; mouse X/Y inversion теперь учитывает vanilla options; одноразовые диагностические записи в latest.log при активации, перехвате мыши и фактическом Camera.setup hook. FreeLook.enabled теперь читается/пишется в config/visionmod/extras.properties вместе с freeLookSmooth. В новом VisionDashboardScreen используется setEnabled.
-Точные последние КОДОВЫЕ коммиты: 76e4bb93600c (require1 camera), a33c41db8187 (require1 + mouse sync), b79b1129be4e (sync + setter), 29aac498b8af (config), 0e41951d5aa4 (GUI), b262107e6162 (inverted mouse and logs), 97cdf323b2767534741676d02173f0161140a462 (camera log).
-СБОРКА: GitHub Actions #110, run https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43592430880, SUCCESS для SHA 97cdf323b2767534741676d02173f0161140a462; артефакт id 14113096353. JAR скачан и распакован: visionmod-2.0.0.jar 4,827,474 байт, SHA256 d9ecd1da4090333a4c7792941c198d59ec70f1fe58c0fb4c74e988c63cbf101c; содержит FreeLook.class, FreeLookCameraMixin.class, FreeLookMouseMixin.class и nested JEI 27.54.0.113 + MezzConfig 0.6.11.
-Minecraft startup smoke #9 на SHA 0e41951d5aa4 SUCCESS, no fatal mixin apply errors; startup smoke #11 для финального SHA 97cdf323 проверять по текущим GitHub Actions (при записи мог быть ещё in_progress).
-НЕ ГАРАНТИРОВАТЬ Free Look В ИГРЕ: smoke CI не нажимает Left Alt и не проверяет поворот камеры, сохранение угла после отпускания, F5 и положение игрока. Нужно запустить на тестовом клиенте и проверить: Left Alt => 3rd person, мышь вращает только камеру, после release угол сохраняется, F5 cancels и сбрасывает. В latest.log при реальном использовании ожидать 3 ключевые строки `[VisionMod][FreeLook] Activated`, `Mouse movement intercepted`, `Camera.setup rotation hook reached`. По их отсутствию можно диагностировать точное место отказа без угадывания. Если не работает: сначала запросить фактический latest.log, SHA JAR, наличие сторонних FreeLook модов.
-ПРОЦЕСС: последующий ИИ обязан проверить текущее состояние кода и Actions перед заявлением об исправлении, а не повторять старые хвалебные отчёты.
-
-
----
-
-*** ВАЖНО: ПОСЛЕДНЕЕ СООБЩЕНИЕ ПОЛЬЗОВАТЕЛЯ — НЕКАЧЕСТВЕННЫЙ GUI/ФУНКЦИИ, НУЖНА ПОЛНАЯ ПЕРЕДЕЛКА ***
-Дата: 2026-11-14. Пользователь крайне недоволен, что предыдущие версии VisionMod 2.0.0 выглядели почти как старое меню, а большинство новых модулей не работали или были имитациями. Он попросил Ctrl+C/Ctrl+V из предоставленного Fading Light 2.0.0. Тот JAR лицензирован All-Rights-Reserved и ранее назван пользователем «кряк», поэтому чужой закрытый код/ассеты не копировались: новая реализация независима. Не путать сходство назначения функций с готовностью/точным паритетом. Пользователю нужен **реальный качественный результат**, без примитивных замен и хвастовства.
-Главный репозиторий всё ещё https://github.com/De1po3oN/VisionMod-1.0.0, ветка main, версия 2.0.0.
-
-*** ЧТО СДЕЛАНО В ЭТОМ СЕАНСЕ ***
-1. Создан НОВЫЙ главный экран src/main/java/com/visionmod/VisionDashboardScreen.java: не перекраска старого VisionScreen, а оригинальная панель шириной до 628 px с семью категориями, карточками, поиском по всему каталогу, отдельной панелью деталей по ПКМ, переключением ЛКМ, сохранением MMB-биндов старых модулей и доступом к старым редакторам через ADVANCED. Настройки Air Hearts/Snowflakes теперь в деталях имеют отдельный режим и плотность. Поиск кэшируется и не выделяет новый список каждый кадр.
-2. В VisionModClient.java Right Shift теперь вызывает new VisionDashboardScreen() вместо new VisionScreen(). Этот факт дополнительно проверен в байткоде финального JAR (javap, вызов new VisionDashboardScreen).
-3. Добавлен отдельный .github/workflows/client-smoke.yml: виртуальный старт Minecraft 1.21.11 через Xvfb с диагностикой/артефактами. Ранее сборки через Gradle сами по себе не доказывали возможность запустить клиент!
-4. Startup smoke #1 и #2 выявили НАСТОЯЩУЮ ошибку комплектации: JEI 27.54.0.113 требовал Fabric-библиотеку mezz_config версии >=0.6.3,<1.0, которой не было. В Fabric Loader — HARD_DEP_NO_CANDIDATE mezz_config. Исправлено build.gradle: modImplementation + include 'net.mezzdev.config:mezz_config-1.21.11-fabric:0.6.11', репозиторий maven.blamejared.com. Лицензия MIT добавлена THIRD_PARTY_LICENSES и src/main/resources/META-INF/licenses/mezz_config/LICENSE.txt. Workflow build.yml теперь требует оба вложенных мода.
-5. GitHub Actions Build #98 для SHA d5a1c9418461e5ef8e741f654668fc9fb8f8c1d2 — SUCCESS (сборка+JEI+MezzConfig+Upload). JAR скачан и проверен вручную: название visionmod-2.0.0.jar, размер 4 826 507 байт, SHA256 b0dd9a7e2f0e4840ccaca2d981f7c0627ed89f93d46d742179f198924b340bc0; версия=2.0.0; внутри VisionDashboardScreen.class, лицензия mezz_config, оба вложенных мода: jei 27.54.0.113 и mezz_config 0.6.11. Сохранён также локальный исходный JAR в ответе как VisionMod-2.0.0-NEW-GUI.jar.
-6. Startup smoke #3 (code SHA 8acd4878) — SUCCESS: после исправления зависимости Minecraft в Xvfb дошёл до Reloading ResourceManager, создания текстурных атласов. Запуск продержался до тайм-аута 100 сек; не было фатальной ошибки Fabric/Mixin. Предупреждение о звуковом устройстве на CI (нет ALSA/OpenAL) не останавливало Minecraft. Startup smoke #4 (SHA d5a1c941) — SUCCESS. НЕ считать этот тест проверкой отображения нового меню по Right Shift, инвентаря, мира, эффектов или FPS.
-7. Отдельный документ GUI_2_0_TEST_GUIDE_RU.md содержит установку только 1 JAR в mods, клавиши, контроль SHA, QA и отличие от старого GUI.
-8. Всё остальное по 35 пунктам в FEATURE_REQUESTS_2_0_0.md. ПРИЗНАННЫЕ НЕДОРАБОТКИ: настоящий motion blur не реализован, ItemPhysics/Trails/China Hat/Pet/GUI и другие эффекты отличаются от Fading; не утверждать «все готовы».
-
-*** ВАЖНО ДЛЯ СЛЕДУЮЩЕГО ЧАТА ***
-Нельзя снова обещать абсолютную исправность без проверки в игре; текущий GUI реально новый по коду, но пользователь глазами ЕЩЁ НЕ ПРОВЕРИЛ. Если он снова видит старый GUI, искать верную папку mods, наличие старых jar, проверять SHA файла и latest.log. Следующая задача — реальные скриншоты/поведение нового GUI, доработка точных функций по 35-пунктовому списку, профессиональный рендер без примитивных заглушек, FPS benchmarks. НЕ заменять эти задачи красивыми отчётами о количестве переключателей.
-При команде «=» продолжать с актуального HEAD, читать this file + FEATURE_REQUESTS_2_0_0.md + GUI_2_0_TEST_GUIDE_RU.md + последние Actions; исправлять, тестировать и обновлять память снова.
-
----
-
-*** АКТУАЛИЗАЦИЯ 2.0.0 ПОСЛЕ КОДОВЫХ КОММИТОВ #86-87 (2026-11-14) ***
-У пользователя ВСЕ 35 пунктов из FEATURE_REQUESTS_2_0_0.md обязательны. Ни один незавершённый пункт нельзя выдавать за готовый.
-Дополнительно к проверенному #80:
-- В VisionFeaturePack.java Arrow Names переведён с подписи в углу экрана на проекцию настоящей позиции ближайшей стрелы в экранные координаты; над стрелой появляется label. При этом это client-screen projection, а не отдельный глубинный NameTag рендер.
-- TNT Indicator теперь показывает оставшийся реальный fuse у PrimedTnt.getFuse(), а не просто расстояние; опасный остаток выделяется.
-- В VisionExtendedFeatures.java World Lyrics теперь рисует пользовательский текст, проецируемый из world-координат: над игроком в 3-м лице, перед камерой в 1-м. Это приближённый world billboard без настоящей окклюзии глубиной, а не исходный Fading.
-- Коммиты: b44968e18c4967e7e80dcd88aca22d2ef0c40889 (TNT+arrow), e6ef88e1aa93dc0ea25fd4d02e80b536602fb8aa (lyrics).
-- Actions #86 SUCCESS, Actions #87 SUCCESS (кодовый HEAD e6ef88e1aa93dc0ea25fd4d02e80b536602fb8aa). Проверен и распакован артефакт #87: visionmod-2.0.0.jar 4 458 762 байт, SHA256 d161795b4a6768af6a8149fceb5f16b79cfd44914b5b16bd3ee59864aa551aa0; metadata version 2.0.0, nested mod jei, проверено наличие новых классов. JAR по-прежнему НЕ тестировался реальным запуском Minecraft. После #87 документация была изменена, код тот же.
-- По исследованиям отдельная MIT библиотека VFX Weaver 2.5.0 совместима с 1.21.11, имеет настоящий motion_blur, но **НЕ подключена** в Vision Mod: не сообщать, что Motion Blur реализован. Сперва проверить зависимость, лицензирование, работу с шейдерами, FPS и получить стабильную интеграцию, иначе не менять проверенный билд.
-- Важные пробелы: полноценная глубина GUI, full Motion Blur, хорошие 3D Trails/China Hat/Pet, полноценные CustomSound/CustomModels/ItemPhysics, поведение по референсу, runtime QA и реальные замеры FPS.
-- Смотри свежий GitHub Actions (новые коммиты документации запускают CI), но исходный JAR #87 соответствует последнему кодовому коммиту на момент этой записи.
-
-
-*** АКТУАЛЬНЕЙШЕЕ СОСТОЯНИЕ — 2026-11-14 / VISION MOD 2.0.0 ***
-Это главный источник контекста следующего чата. Текущая цель пользователя: ПОЛНОЕ и качественное выполнение ВСЕХ 35 пунктов, не части. В прошлом ответе ИИ ошибочно назвал их 34, правильно 35. Самовольное удаление/закрытие задач ЗАПРЕЩЕНО.
-ПОЛНЫЙ ОБЯЗАТЕЛЬНЫЙ СПИСОК и поэлементные статусы: FEATURE_REQUESTS_2_0_0.md (переписан под все 35; прочитать первым вместе с этим файлом).
-
-САМЫЙ НОВЫЙ ПРОВЕРЕННЫЙ КОД НА МОМЕНТ ЗАПИСИ:
-- Репозиторий https://github.com/De1po3oN/VisionMod-1.0.0, ветка main; GitHub имя старое, version в build.gradle/fabric metadata/CI = 2.0.0. Не переименовывать без просьбы.
-- Последний проверенный кодовый SHA: 19c713cd76a974e87a25974d276a35c998c6a065.
-- GitHub Actions #80: https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43579928856, SUCCESS, JAR artifact id 14106949606.
-- Архив Actions скачан и распакован вручную. visionmod-2.0.0.jar = 4 456 883 bytes; SHA256 39be26e0ce529c69b79219336e1fcd23a6c8acaa7f44a180ee22917bf1d191cc. fabric.mod.json id=visionmod version=2.0.0; проверены классы VisionCustomModels/VisionTools2/VisionMotionEffects/VisionExtendedFeatures/VisionWorldEffects и два новых Mixins. Вложенный JEI 27.54.0.113 присутствует.
-- УЖЕ БЫЛИ компиляционные ошибки #67-73: ItemStack.getDescriptionId не существует в MC 1.21.11 (исправлено на BuiltInRegistries.ITEM.getKey), CameraRenderState находится в net.minecraft.client.renderer.state (исправлен import+method desc). Начиная с #74 сборки прошли.
-- НОВЫЕ ИЗМЕНЕНИЯ ПОСЛЕ #80 — только файлы документации, пока никто не менял код. Всегда сверяй HEAD и свежие Actions.
-- НЕТ доказанного запуска модификации в клиенте Minecraft после #80. НЕТ измерений FPS, теста рендера, эмиссии частиц, совместимости с шейдерами и другими модами. CI не проверяет runtime Mixin injection, падения при входе в мир или визуальную корректность.
-
-ЧТО ДОБАВЛЕНО ПОСЛЕ СБОРКИ #57:
-VisionExtendedFeatures.java: Block Overlay (inner wire), Kill Effect (DEFEATED overlay, не серверная атрибуция), World Color (цветовая экранная подложка), World Lyrics (пользовательский текст на HUD), Local Pet (орбитальная каркасная фигурка), Social Radar (список друзей через config, до 48 блоков), Custom Sound (ванильный звук при hurtTime цели), Clear Weather FX (обычные дождевые/снежные частицы, не влияет на явно включённые снежинки Vision).
-VisionMotionEffects.java: Swing Animation/Item Physics (опциональные Mixins), Spear Lunge/Pierce локальные облачка/CRIT частицы без вмешательства в сервер, Camera Streaks (НЕ настоящий Motion Blur). 
-VisionCustomModels.java: собственный JSON с 32-бокс лимитом; создаёт sample config/visionmod/custom-model.json; локальный 3D wireframe, не оригинальные модели Fading.
-VisionTools2.java: Fast Use (обычный useItem не чаще 7 тиков при удержании ПКМ в пустом пространстве, серверные cooldown сохранены), Custom Models toggle, Hit Color (RMB циклические оттенки).
-VisionModClient и visionmod.mixins.json обновлены; VisionScreen EXTRAS теперь 8 страниц. Settings in config/visionmod/{features-2,world-effects-2,extended-2,motion-2,tools-2}.properties. Новые элементы по умолчанию отключены.
-Преимущественно добавлены КАНДИДАТЫ и ЧАСТИЧНЫЕ реализации, а не полные эквиваленты. В частности НЕТ настоящего Motion Blur, полноценных Custom Sounds, World Lyrics в 3D, Item Physics collisions, плавных Trails, качественной China Hat, полного GUI как в референсе. Подробности в FEATURE_REQUESTS_2_0_0.md.
-
-ПОЛИТИКА:
-- Пользователь требует именно ВСЕ 35, не «сделай на выбор», и прежде всего высокое качество, проверку Minecraft 1.21.11/Fabric, максимально сильный FPS Boost.
-- Старый бинарник fading-beta-2.0.0-fabric.jar был предоставлен как визуальный референс. fabric.mod.json содержит All-Rights-Reserved. Не копировать его чужой исходный или декомпилированный код, шрифты, звуки, ресурсы или объекты дословно; создаём независимые реализации.
-- Не объявлять класс или кнопку доказательством функции. Сначала тест в игре и сравнение с видео/описанием пользователя.
-- В приоритете: исправить runtime в новом JAR, затем полное поведение каждого из 35 модулей, потом benchmark. Реальные серверные cooldown/механики spear не обходить.
-- Когда пользователь присылает "=" — без повторных вопросов открыть этот файл, FEATURE_REQUESTS_2_0_0.md, текущие Actions/исходники, работать с оставшимися задачами и обновить оба файла с точным статусом.
-- Не забывать предыдущие настройки Right Shift/End/Left Alt, JEI и удалённую сетевую косметику. Локальные China Hat/Pet/Custom Models добавлены только как новый запрос.
-
-
----
-
-*** СБОРКА VISION MOD 2.0.0 ПОДТВЕРЖДЕНА (ДОБАВЛЕНО 2026-11-14) ***
-GitHub Actions #57, run https://github.com/De1po3oN/VisionMod-1.0.0/actions/runs/43578320155, HEAD сборки 6fb80a0a42a08846bf2b11778beb655085143c1b, status SUCCESS, artifacts id 14107252915 («VisionMod-2.0.0»).
-Фактически скачан ZIP и вручную проверен visionmod-2.0.0.jar (4 431 836 байт), SHA256=3754c594c3c6c6be73bc03a5dcc95928188e8e568733057cfbb266fcb408f5b6; fabric.mod.json version=2.0.0; классы VisionFeaturePack.class и VisionWorldEffects.class присутствуют; вложенный JEI mod id=jei version 27.54.0.113. Это ПОДТВЕРЖДАЕТ CI И СОДЕРЖИМОЕ JAR, НО НЕ ИГРОВУЮ РАБОТОСПОСОБНОСТЬ.
-После #57 были изменения ТОЛЬКО в .md/.txt документации; при проверке в будущем сверить текущий HEAD и Actions. Самый точный список реализованных/недоделанных модулей в FEATURE_REQUESTS_2_0_0.md. Никакие сотни функций из другого мода не переносились автоматически.
-
-*** АКТУАЛЬНО ДЛЯ СЛЕДУЮЩЕГО ЧАТА: VISION MOD 2.0.0 ***
-Дата: 2026-11-14.
-Репозиторий НЕ переименовывали: https://github.com/De1po3oN/VisionMod-1.0.0
-Ветка: main. Версия В КОДЕ И CI = 2.0.0. Раньше была 1.1.0; все записи про 1.1.0 ниже — история, НЕ текущее состояние.
-Пользователь прислал большой список модулей Fading Light 2.0.0 и попросил сделать аналог для Vision Mod, с качественным GUI, минимальными поломками и максимально сильной оптимизацией FPS. Список всех модулей и точный статус см. ОБЯЗАТЕЛЬНО `FEATURE_REQUESTS_2_0_0.md`. Не утверждать, что весь список реализован. Большая часть сложных 3D/боевых функций ещё в планах.
-Прикреплённый сторонний `fading-beta-2.0.0-fabric.jar` проверен статически: Minecraft 1.21.11/Fabric; в fabric.mod.json license All-Rights-Reserved. ЧУЖОЙ КОД, ТЕКСТУРЫ, ШРИФТЫ И ЗВУКИ НЕ ПЕРЕНОСИТЬ; в Vision Mod написаны независимые реализации и используется только список функций как ТЗ. Не запускать неизвестный JAR для анализа.
-
-УЖЕ ВНЕСЕНО В SOURCE И В GUI:
-1) VisionFeaturePack.java: 8 опциональных HUD-модулей: Aspect Bars, Armor Colorful (цветной HUD прочности, не 3D крашеная броня), Target Health, Hit Range, TNT Indicator (только дистанция), Arrow Names (имя и дистанция ближайшей стрелы на HUD, не над стрелой), Hit Pulse, Blood Hit (экранная подсветка, если прицеливаемая сущность получила урон). Все OFF по умолчанию; сохранение в config/visionmod/features-2.properties. Поиск TNT/стрел каждые 10 тиков, не каждый кадр.
-2) VisionWorldEffects.java: 4 опциональных эффекта в мире: Target ESP (контур hitResult живой сущности), Trails (до 13 контурных точек), Jump Circles (точечное кольцо при приземлении), China Hat (каркас над игроком от первого лица скрыт). Все OFF по умолчанию; сохранение в config/visionmod/world-effects-2.properties; используют WorldRenderEvents.BEFORE_DEBUG_RENDER и тот же RenderTypes.lines, что прежний TargetOutline.
-3) VisionScreen.java: EXTRAS расширен до 5 страниц; новая страница 2.0 HUD & COMBAT и страница 2.0 WORLD FX. Существующие бинды/настройки Extras не перенумерованы.
-4) VisionModClient.java: инициализация новых модулей. build.gradle/version, VisionMenuTheme.VERSION, Fabric metadata description, GitHub Actions workflow обновлены до 2.0.0. Услуги косметики не возвращались; локальный China Hat — самостоятельный эффект.
-
-ПРОВЕРКИ GITHUB:
-- Actions #50 для SHA 2a409bdc — SUCCESS, компиляция/проверка включённого JEI и JAR. Это версия 2.0.0 ДО добавления World FX.
-- Actions #54 для SHA 60f25182 — SUCCESS, включает новые World FX и GUI. Это компиляция, не запуск в Minecraft.
-- При чтении файла всегда открывать свежую историю Actions и текущий HEAD (после коммитов документации могут быть новые run). Последний СОВПАДАЮЩИЙ с HEAD билд надо проверять отдельно.
-- Часть промежуточных Actions #47-49 падали из-за рассинхронизации имени JAR и версии в workflow. После исправления #50 и #54 успешны.
-- РЕАЛЬНЫЙ клиент Minecraft, шейдеры, free look в игре, FPS, визуальная корректность новых эффектов НЕ проверены. НЕ заявлять обратное.
-
-ПРИОРИТЕТЫ:
-- Следующий шаг: проверить клиент / собрать QA по 2.0.0, визуально доработать эффекты и GUI по отзывам пользователя. Затем продолжить остальные пункты из FEATURE_REQUESTS_2_0_0.md: Block Overlay, Clear Render, Item Physics, Motion Blur, настоящие 3D Arrow Labels, Custom Models, Spear Lunge/Pierce, Swing, World Lyrics, World Customizer, Fast Use, Social, Pet, расширенный CustomSound, Kill Effect и т.д.
-- FPS на первом месте. Не создавать тяжёлые рендеры на каждый кадр без лимитов, отключать дорогие эффекты в MAX FPS по выбору пользователя, при этом не скрывать явно включённые эффекты молча. Реальный прирост подтверждать 3×60 сек в одних условиях.
-- При команде пользователя "=" продолжать на текущем HEAD, сначала читать последние логи и известные ошибки, потом править реальные классы/миксины, собирать, обновлять FOR_AI.txt. Не давать фрагменты за готовый проект.
-
-
----
-
-*** АКТУАЛЬНОЕ ОБНОВЛЕНИЕ 1.1.0 ОТ 2026-11-14 — ЧИТАТЬ ПЕРВЫМ ***
-ПРОВЕРЕННЫЙ АРТЕФАКТ 1.1.0: Actions #41 (run id 43575324724, commit 6d282ef1) — success, Build / Verify JEI / Upload JAR successful. Artifact id 14105314176, name VisionMod-1.1.0, contains visionmod-1.1.0.jar. JAR вручную распакован: metadata id=visionmod, version=1.1.0; nested META-INF/jars/u6dRKJwZ-1MYoCSWP.jar содержит мод jei версии 27.54.0.113. Реальный Minecraft runtime не тестировали; это не обещание, что Free Look и Air Hearts именно так, как хочет пользователь. Новый QA_CHECKLIST_RU.md содержит раздел проверки 1.1.0. Последующие коммиты документации могут запускать новые workflow; сравнить свежий HEAD.
-
-Пользователь приложил fading-beta-2.0.0-fabric.jar как визуальный РЕФЕРЕНС. Это all-rights-reserved сторонний мод; его JAR не запускали, чужой код/текстуры/шрифты не копировали. По файлам архива подтверждены AmbientParticleController и UI assets, но внешний вид рабочего GUI в игре ещё не исследован, а эффект Heart из этого мода визуально не подтверждён.
-
-Актуальная версия теперь 1.1.0 (build.gradle), при том же репозитории De1po3oN/VisionMod-1.0.0 (репозиторий не переименовывать без команды). Minecraft 1.21.11 / Fabric / Java 21.
-Главный запрос пользователя: Free Look и Air Hearts выглядели «не так», переделать; GUI сделать более современным, но НЕ точной копией; добавить полезные настройки; не забывать максимально сильную оптимизацию FPS. Пользователь собирается лично оценить сторонний визуал и дать точные пожелания позже. Приоритет: учесть его следующую обратную связь, не спорить со вкусом, править реальные файлы.
-
-Изменения исходников в этом сеансе:
-- FreeLook.java: ограничение дельт мыши, плавная независимая орбита с time-based interpolation, сброс F5, восстановление предыдущей перспективы при отключении Vision Mod. Требует теста в игре.
-- mixin/FreeLookCameraMixin.java: подаёт интерполированные yaw/pitch.
-- VisionExtras.java: WORLD/CAMERA ambient layout, LOW/MEDIUM/HIGH плотность, сохрание настроек; Heart/Snowflake используют ванильные частицы. WORLD: пространство вокруг игрока; CAMERA: облако перед камерой. Нельзя выдавать это за визуальную копию Fading.
-- VisionScreen.java: новые настройки в EXTRAS page 3; ПКМ на Air Hearts/Snowflakes открывает настройки, ПКМ на Free Look переключает сглаживание.
-- VisionMenuTheme.java: собственная графитово-лавандовая палитра, переключатели и уменьшенная визуальная нагрузка. Версия 1.1.0.
-- Обновлены README.md, PLAN_STATUS_RU.md, CHANGELOG.md, fabric.mod.json, .github/workflows/build.yml, GITHUB_REPO_DESCRIPTION.txt. Gradle скрипт build.gradle тоже обновлён до 1.1.0.
-Проверки: GitHub Actions #30 был SUCCESS для обновлённого Java-кода под версией 1.0.0; #31 FAILED из-за старых hardcoded путей имени JAR после смены version. Workflow обновлён с ожидаемым путём visionmod-1.1.0.jar. Запуск Minecraft и совпадение сердца/камеры с ожиданием не тестировались. Свежую успешную сборку 1.1.0 следует искать в GitHub Actions на main.
-
-Следующие действия для любого ИИ:
-1. Сверить свежий HEAD и последний CI; если CI красный, получить лог job и исправить причину.
-2. После пользовательского теста уточнить на конкретных примерах форму, плотность и позицию сердечек и поведение Free Look, затем исправить точечно.
-3. Проверить и подтвердить GUI, ввод мыши и анимацию реальным запуском.
-4. Профилировать FPS на тяжёлом спавне (реальные замеры), не заявлять фиктивных процентов.
-5. После изменений ВСЕГДА актуализировать FOR_AI.txt (этот блок) и CHANGELOG, чтобы новый чат не терял состояние.
-
-===== ИСТОРИЧЕСКАЯ ПАМЯТКА 1.0.0 (ниже; не считать её самой свежей) =====
-
-===== СРОЧНОЕ ОБНОВЛЕНИЕ 1.1.0 / 2026-11-14 =====
-Пользователь поручил перевести проект на версию 1.1.0, переработать Free Look и Air Hearts (текущий вид его не устраивал), обновить GUI по настроению прикрепленного Fading Light 2.0.0, но НЕ копировать чужой код и ассеты, предложить собственные дополнительные функции. Пользователь собирался запустить визуальный мод-референс и затем уточнить целевой вид. ЭТО ЕЩЕ НЕ ФИНАЛЬНЫЕ ТРЕБОВАНИЯ К ВНЕШНОСТИ, поэтому адаптировать после отзыва.
-В src уже внесены изменения: FreeLook со сглаживанием и независимым поворотом; VisionExtras с ambientStyle (0 мир вокруг игрока / 1 перед камерой) и ambientDensity (1..3); VisionScreen с настройками Heart FX mode / Ambient density / Smooth Free Look; VisionMenuTheme обновлена в графитово-сиреневой гамме. Проверь текущие исходники и GitHub Actions, прежде чем заявить, что всё работает.
-build.gradle: version = '1.1.0'. Ранее README/CHANGELOG также обновлены.
-ДОКАЗАНО: предыдущие CI прогоны исходников 1.1.0 UI/FX до изменения номера были успешны (#26–30); полный билд текущего HEAD 1.1.0 требуется сверить отдельно. Запуск в игре и точная эстетика НЕ проверены.
-ВНИМАНИЕ: не сбрасывать версию обратно на 1.0.0, репозиторий по-прежнему называется VisionMod-1.0.0, менять его имя не требуется.
-Если пользователь пишет '=', продолжать разработки с актуального HEAD и в конце обновлять этот файл с SHA, run и результатом. Не заменять это обновление утверждениями о гарантированном отсутствии ошибок.
-===== КОНЕЦ ОБНОВЛЕНИЯ =====
-
-VISION MOD — FOR AI / ПАМЯТКА ДЛЯ СЛЕДУЮЩЕГО ЧАТА
-Дата актуализации: 2026-11-14
-Репозиторий: https://github.com/De1po3oN/VisionMod-1.0.0
-Ветка: main
-Игра: Minecraft Java 1.21.11; Fabric Loader 0.19.3; Fabric API 0.141.6+1.21.11; Java 21.
-Версия в build.gradle: 1.0.0 (Open Beta).
-Этот файл — передача контекста, НЕ гарантия, что все функции исправны.
-
-===== ЧТО НУЖНО ДЕЛАТЬ НОВОМУ ИИ В ПЕРВУЮ ОЧЕРЕДЬ =====
-1. Открыть актуальный GitHub-репозиторий по ссылке выше; ПРОЧИТАТЬ этот файл, README.md, PLAN_STATUS_RU.md, QA_CHECKLIST_RU.md, CHANGELOG.md и последние GitHub Actions/коммиты.
-2. Не предполагать, что содержимое этого файла новее GitHub: всегда проверять текущий HEAD ветки main, изменения файлов, статус Actions и логи последнего неуспешного билда.
-3. Когда пользователь отправляет ровно "=" — это команда ПРОДОЛЖАТЬ разработку: брать незакрытые задачи, исправлять ошибки, оптимизировать FPS, проверять изменения. Не требовать заново описывать проект.
-4. При работе с кодом читать НАСТОЯЩИЕ файлы репозитория. Не писать Fabric API/mixin-код наугад. Проверять сигнатуры под Minecraft 1.21.11; не объявлять ничего «100% рабочим» без сборки и запуска.
-5. После каждого изменения обновлять этот FOR_AI.txt: дата, SHA последнего проверенного коммита, что изменено, что собрано, что проверено в игре, известные баги, что делать следующим. Так новый чат продолжит с актуальной точки.
-6. По возможности реализовывать задачу в репозитории, а не давать обрывки кода. Если нет доступа к записи — честно сообщить и дать полные файлы/патч.
-7. Не делать вид, что повышение FPS доказано, пока не получены измерения с одинаковыми настройками и сценой.
-
-===== ПОДТВЕРЖДЁННОЕ СОСТОЯНИЕ GITHUB НА 2026-11-14 =====
-HEAD main на момент проверки: 7bdfd05c02cd9abcefa0c9765fe4cafd3436168b.
-Последний проверенный GitHub Actions run: #24 (id 43534193371), статус completed/success; коммит совпадает с HEAD выше.
-Job «Build Fabric 1.21.11 / Java 21»: успешны шаги Build, Verify JEI is included, Upload JAR.
-Это подтверждает CI-сборку и проверку вложения JEI на стороне Actions, но не тест Minecraft-клиента, функциональности JEI, визуальных эффектов, совместимости с шейдерами, FPS или отсутствия runtime crash.
-Артефакт по ожидаемому имени: build/libs/visionmod-1.0.0.jar (см. README и QA); наличие в CI подтверждено успешным Upload JAR, не ручным запуском.
-
-Последние изменения по коммитам (нужно сверять с кодом):
-- 7bdfd05: документация Free Look, ambient FX, FPS.
-- 3f1d6a3: QA для Free Look, частиц и обратимого FPS boost.
-- 7ec02eb: предупреждение о конфликте биндов другого FreeLook.
-- 4983b8e: защита типов FullBright.
-- e396c75: повторное использование текстовых компонентов/буферов HP для снижения GC.
-- 943cfff: восстановление видео-настроек при выключении мода через End.
-- d00e27c: обратимый FPS Boost (AO, прозрачность, листья, погода, расстояние сущностей).
-- ffa146b: ограничение повторных сканирований руд и кеши рендера.
-- 2bde695 и 03affc8: Free Look / MouseHandler 1.21.11.
-- a99c4d5 и ca67ec7: снежинки и сердечки, включая режим MAX FPS.
-
-===== ПРЕДПОЧТЕНИЯ ПОЛЬЗОВАТЕЛЯ И РЕЖИМ РАБОТЫ =====
-- Главный приоритет: ОЧЕНЬ СИЛЬНЫЙ, измеряемый FPS Boost на загруженном серверном спавне, без бессмысленных затрат CPU и без поломки игры.
-- Пользователь требует полный код/готовый JAR, а не случайные фрагменты.
-- Чётко отделять: «реализовано в исходниках», «CI BUILD SUCCESS», «проверено вручную в Minecraft», «FPS подтверждён замерами».
-- Исправлять известные и потенциальные баги, делать регрессионные проверки; не обещать нулевое число багов.
-- По возможности обновлять описание изменений/CHANGELOG при каждом апдейте.
-- Историческое версионирование пользователя: новая вкладка меню +0.1; мелкая правка +0.0.1; открытая бета +1.0. Сейчас проект уже 1.0.0 Open Beta, не менять номер без основания/поручения.
-
-===== ПРОЕКТ: ФУНКЦИИ И ТРЕБОВАНИЯ =====
-Основное: FullBright; подсветка руд (в том числе древние обломки, варианты deep slate), настройки цветов и HSV; видимость в воде/лаве, контроль тумана; фильтрация частиц по категориям; HP/сердечки над игроками; HUD; подсветка блоков.
-Интерфейс: GUI по Right Shift, анимации, вкладки VISUALS / ORES / EXTRAS / PERFORMANCE / CONFIGS, ПКМ для настроек, MMB для назначения бинда; End — глобальное отключение. Настраиваемые горячие клавиши и JSON-конфиги.
-Дополнительно: Free Look (Left Alt), Zoom, CPS, редактор прицела, HUD брони/еды, снежинки, Air Hearts, шалькер-подсказки, low fire, компактные предметы и прочие Extras.
-Free Look: удержание Left Alt => независимая камера в 3-м лице, тело игрока не вращается вместе с камерой; после отпускания Alt угол камеры сохраняется; F5 сбрасывает этот угол. Может конфликтовать со сторонним FreeLook-модом: проверять без него либо устранить конфликт биндов.
-Snowflakes / Air Hearts: обязаны отображаться при явном включении даже с MAX FPS и HIDE ALL; можно адаптивно снижать частоту, но не молча выключать.
-JEI: настоящий JEI включён через Fabric Loom include как вложенный независимый мод (см. build.gradle); проверить его присутствие и работу в инвентаре. Следить за лицензией.
-FPS: пресеты MAX FPS/BALANCED/VISUAL, Real FPS Boost с обратимым изменением ванильных видео-настроек, 4/6/8 cap чанков, адаптивное управление, оптимизация руд, HP, табличек.
-Таблички/светящиеся надписи: оптимизатор уменьшает лишнюю работу рендера; близкие таблички (<12 блоков) должны обновляться сразу, дальние кешируются ограниченно, смена свечения/цвета обновляется, сами таблички не должны исчезать. Не заявлять, что это ускоряет серверный TPS.
-ВАЖНО: косметику (рюкзаки, короны, Worker и синхронизацию) пользователь потребовал ПОЛНОСТЬЮ УДАЛИТЬ. НЕ добавлять обратно без явной новой просьбы. Старые локальные конфиги могут содержать поля cosmetics, их нужно безопасно игнорировать.
-
-===== ЧТО ЕЩЁ НЕ ПРОВЕРЕНО / НА ЧЁМ ОСТАНОВИЛИСЬ =====
-1. РЕАЛЬНЫЙ запуск 1.0.0 в Minecraft после Actions #24. CI success не подтверждает runtime.
-2. Free Look: камера не должна вращать игрока; отпускание Alt сохраняет вид; F5 сброс; совместимость с конфликтующими модами.
-3. Snowflakes/Air Hearts: видны в обеих перспективах, на людном спавне, после перезапуска и в MAX FPS/HIDE ALL.
-4. FPS: пользователь раньше сообщал, что 0.8.4 делает FPS стабильнее, но не повышает среднее значение. Реальные результаты 1.0.0 не измерены.
-5. JEI: проверено включение в CI; нужно проверить поиск/рецепты в игре и серверные ограничения.
-6. Подсветка руд с шейдерами, сканирование при движении/стоянии и отсутствие лишней нагрузки.
-7. Восстановление настроек после выключения Real FPS Boost, через End, после смены мира/перезапуска.
-8. HP над игроками, частицы ломания блоков, совместимость с Emotecraft/playeranimcore и Sodium.
-9. Полный план из ранее упомянутых 21 задач НЕ считать выполненным по умолчанию; часть исторических материалов может быть устаревшей (например KEYBINDS_RU.md всё ещё ссылается на косметику).
-10. Файлы README.md и BETA_1_0_0_SESSION_RECAP_RU.md содержат более ранние предупреждения, будто исходники «не скомпилированы». Они устарели относительно успешного Actions #24, НО ограничения по игровым тестам остаются.
-
-===== ПРИОРИТЕТНЫЙ ПЛАН ПРОДОЛЖЕНИЯ =====
-А. Прочитать свежие исходники, Actions/логи и сверить реальные существующие функции.
-Б. Исправить подтверждённые баги Free Look, снежинок, сердечек, HUD/шейдеров без регрессий.
-В. Профилировать и снижать реальную работу на горячих участках (каждый тик/кадр, рендер сущностей, табличек, сканирование руд, аллокации), не только уменьшать графику. Учитывать стабильность и обратимость настроек.
-Г. Собрать через GitHub Actions и проверить артефакт/JEI. Вручную проверить клиент и совместимость там, где есть тестовая среда; если её нет, отметить «не тестировалось».
-Д. Для FPS сравнивать 3×60 сек в одинаковой сцене: средний FPS, 1% low, frametime, CPU/GPU, шейдеры, render distance, количество сущностей и табличек.
-Е. Обновить CHANGELOG/QA/FOR_AI.txt и указать точный SHA и результаты, чтобы следующему чату не пришлось восстанавливать всё заново.
-
-===== ФАЙЛЫ ДЛЯ ЧТЕНИЯ =====
-README.md; CHANGELOG.md; PLAN_STATUS_RU.md; QA_CHECKLIST_RU.md; BETA_1_0_0_SESSION_RECAP_RU.md; KEYBINDS_RU.md (исторические данные, могут быть устаревшими); .github/workflows/build.yml; build.gradle; src/main/java/com/visionmod/{VisionModClient,FreeLook,VisionPerformance,VisionRenderBoost,VisionSignOptimizer,OreHighlight,VisionExtras,VisionHotkeys}.java; src/main/java/com/visionmod/mixin/*.
-
-===== ФОРМАТ ОБНОВЛЕНИЯ ЭТОГО ФАЙЛА ПРИ КАЖДОЙ СЕССИИ =====
-Дата:
-Актуальная версия / ветка / HEAD SHA:
-Что было запрошено:
-Что изменено (пути к файлам, коммиты):
-CI (run URL, номер, результат):
-Проверено в Minecraft:
-Замеры FPS (условия/результат):
-Открытые баги:
-Следующее действие:
-Не переписывать историю так, словно непроверенные исправления уже гарантированно работают.
+VISION MOD 2.0.0 · ПРОМТ ДЛЯ СЛЕДУЮЩЕЙ ИИ
+Актуализировано 28.11.2026
+
+=== РОЛЬ И НАЧАЛО РАБОТЫ ===
+
+Ты продолжаешь разработку Vision Mod вместе с его владельцем. Пользователь
+пишет по-русски, иногда коротко и разговорно. Разберись в фактическом
+поведении проекта, учитывай историю ниже и отвечай по-русски. Выполняй
+следующую задачу пользователя с правками в репозитории и проверками.
+
+Начни с git status --short --branch, git log -8 --oneline и README.md.
+Сверь рабочую копию, ветку и последние изменения. Если тебе сначала
+поручили прочитать код, изучи соответствующую версию и дождись задачи.
+«Продолжай» или «=» в ходе работы означает продолжить активную задачу
+с текущего состояния. Уточнения владельца важнее старой памятки. Перечень
+35 функций ниже по ссылкам отражает долгосрочный замысел проекта.
+
+Работай самостоятельно. Разбирай ошибки по исходникам, логам и повторяемым
+проверкам. Прими обратимые технические решения сам. Спрашивай, когда без
+ответа нельзя понять требование или продолжить работу. Сохраняй чужие
+изменения в рабочей копии. Правь нужные модули и доводи задачу до результата,
+включая сборку JAR, если поменялось поведение мода. Если сборка или тест
+не прошли, разберись с причиной и повтори проверку. В ответе дай результат,
+путь в игровом меню, если он нужен, и сборку либо конкретный оставшийся
+блокер. Для длинной задачи сообщай о существенных находках по ходу работы.
+
+=== РЕПОЗИТОРИЙ И ТЕХНОЛОГИИ ===
+
+Основной репозиторий https://github.com/De1po3oN/VisionMod-2.0.0.
+Его прежнее имя и имя рабочей папки в Cloud — VisionMod-1.0.0. Другие
+VisionMod-0.x, VisionMod-Standalone и VisionMod в /workspace содержат
+исторические версии. Бери свежие исходники из VisionMod-1.0.0, если
+пользователь не назвал другую версию.
+
+Текущая ветка разработки — codex/visual-refresh. Проверенные изменения
+публиковались в ней. Для main отдельного указания о слиянии пока не было.
+codex/visual-evidence служит для выходных файлов CI. qa/sacred-war и
+qa/item-render-hooks — отдельные экспериментальные ветки и рабочие копии.
+Папки /workspace/artifacts и /tmp зависят от среды, поэтому в ссылках на
+готовые сборки используй точный опубликованный коммит.
+
+Версия мода 2.0.0 Open Beta. Minecraft Java 1.21.11, JDK 21, Gradle 9.7.1,
+Fabric Loom 1.17.20, Fabric Loader 0.19.3+, Fabric API 0.141.6+1.21.11.
+Маппинги официальные Mojang. build.gradle собирает
+build/libs/visionmod-2.0.0.jar и вкладывает JEI 27.54.0.113 с MezzConfig
+0.6.11. Оба вложения нужны для совместимости с текущим JEI. Fabric API
+остаётся обычной зависимостью. Клиентские модули регистрируются в
+VisionModClient, общий вход VisionMod отвечает за регистрацию обмена V.
+Один JAR поддерживает установку на клиент и запуск выделенного сервера.
+
+=== ЧТО ВЛАДЕЛЕЦ СЧИТАЕТ ХОРОШИМ РЕЗУЛЬТАТОМ ===
+
+- Чистый Fabric-мод. World Lyrics получает данные медиасессии из самой
+  игры через системный интерфейс. Браузерное расширение, локальный мост
+  и обязательный отдельный сервис отменены.
+- Аккуратный GUI со своим дизайном, понятными настройками, плавными
+  переходами и сохранением рабочего состояния. ТГК @cocok_ali и сервер
+  mc.showtime.su должны оставаться в интерфейсе. Fading Visuals / Fading
+  Light использовался как функциональный и визуальный ориентир. Ресурсы
+  и код закрытого мода не входят в Vision Mod. Шрифт Inter из открытого
+  источника, лицензия и сведения есть в THIRD_PARTY_NOTICES.md.
+- Реальная работа функции через обычное управление, а для визуала ещё и
+  результат в кадре. Удачная компиляция подтверждает сборку. Smoke
+  подтверждает запуск и свои проверки. Клиентский GameTest проверяет
+  конкретный сценарий в Minecraft. Про FPS можно говорить после замеров.
+- Пользователь хочет высокий и стабильный FPS, особенно на людном спавне.
+  Ограничивай работу на тик и кадр, сохраняй обратимость видеонастроек.
+  Сравнивай FPS и 1% low в одинаковой сцене и конфигурации; для отчёта
+  подойдут три прогона по 60 секунд, средний FPS и время кадра.
+- Для показа игрокам делай реальные кадры из Minecraft. Прикладывай
+  доступный файл или прямую ссылку на PNG. Для каждого результата
+  различай тестовое воспроизведение и живой пользовательский сценарий.
+
+=== КАРТА КОДА И ТЕКУЩЕЕ ПОВЕДЕНИЕ ===
+
+GUI, настройки и ввод
+- Right Shift открывает VisionDashboardScreen через VisionMenuSession.
+  Память раздела, страницы, поиска и дочернего экрана живёт в пределах
+  запущенного Minecraft. Right Shift закрывает меню в игру и возвращает
+  туда же. Escape из настроек возвращает в родительский экран.
+- DashboardLayout и PanelLayout задают размеры и области клика.
+  VisionGuiTheme и VisionFonts оформляют меню; VisionHudTheme оформляет
+  HUD. Значения ТГК и сервера лежат в VisionMenuTheme, общая подпись
+  рисуется через VisionGuiTheme.branding. ЛКМ по переключателю, ПКМ
+  открывает детали, СКМ назначает бинд. Проверяй компактный и широкий GUI.
+- VisionHotkeys, VisionAppearance, VisionProfiles и локальные properties
+  хранят бинды, внешний вид и значения. Сохраняй существующие ID и чтение
+  старых конфигов. End — глобальный OFF с восстановлением параметров FPS
+  Boost. В открытом чате HUD двигается ЛКМ, позиция сбрасывается ПКМ.
+- Free Look работает на удержании Left Alt. Мышь вращает камеру, yaw/pitch
+  игрока сохраняются. Отпускание сразу возвращает прежнюю перспективу,
+  F5 отменяет орбиту в пользу ванильного вида. FreeLookCameraMixin
+  оборачивает оба вызова Camera.setRotation в Camera.setup. Ordinal 0
+  относится только к одной ветке, обычная камера использует другую.
+  Смотри также FreeLookMouseMixin и VisionControlsGameTest.
+- SmoothHotbarMixin и HotbarTween плавно передвигают выделение примерно за
+  140 мс. Выбранный предмет меняется сразу. Сохраняй управление цифрами,
+  колесом и выключение анимации.
+- Fast Scroller (VisionFastScroller, FastScrollGesture,
+  ContainerScreenAccess) использует ванильный QUICK_MOVE. Shift + колесо
+  над слотом или Shift + ЛКМ с ведением по слотам в обычном инвентаре и
+  контейнере. Дедупликация слотов на один жест, проверка взятого стека.
+  MouseHandler.isLeftPressed относится к игровому вводу; GUI использует
+  свои события press/release. Проверяй серверные остатки, модификаторы,
+  переполненный контейнер и выключение. Креативный каталог вне охвата.
+
+Мир, видимость и боевые эффекты
+- VisionWorldEffects рисует Target ESP, Trails, Jump Circles, China Hat.
+  VisionFeaturePack держит Target HUD, дистанцию, броню, индикацию TNT и
+  стрел, Hit Pulse. VisionCombatTracker отслеживает реакцию сущности на
+  собственную атаку клиента. «Target down» означает наблюдение гибели
+  цели после удара. Серверную атрибуцию убийства мод не получает.
+- Последний фикс инвиза проверяет LivingEntity.isInvisible() для цели
+  под прицелом и сохранённой цели в HUD. В момент смены видимости фильтр
+  действует при отрисовке. Friend Zone и боевые эффекты также проверяют
+  невидимость. При добавлении нового эффекта, связанного с чужой
+  сущностью, проверь отображение и уже активный эффект после её ухода в
+  инвиз. По умолчанию сохраняется ванильное поведение TAB.
+- Визуал → Скрыть ники и бирки выключает мировые подписи игроков и
+  сущностей через HideEntityNameTagMixin и VisionPlayerBadgeMixin.
+  Настройка сохраняется в Appearance и профилях. Проверки в
+  VisionNameTagGameTest.
+- Утилиты → Friend Zone → Настроить открывает список других видимых
+  игроков до 48 блоков и вкладку сохранённых друзей. Добавление из строки
+  и по нику, удаление офлайн, текущая вкладка при возврате. Поиск рядом
+  общий для GUI и HUD, см. VisionExtendedFeatures.nearbyPlayers и
+  VisionFriendZoneScreen. Старое имя Social Radar ищется как псевдоним.
+- Метка V рядом с ником — VisionPresence, VisionPresenceClient и mixins.
+  Для чужих клиентов нужен тот же JAR на Fabric-сервере с Fabric API.
+  Сервер берёт UUID из соединения. Без поддержки видна собственная
+  метка в TAB. Включение, отзыв и очистка при disconnect входят в
+  игровой тест; обмен между двумя отдельными клиентами не проверялся.
+- Ore Highlight → Настроить → Радиус. Макс. 64 блока от игрока по каждой
+  горизонтальной оси, вертикаль до ±6 блоков. Радиус хранится в
+  VisionPerformance, профилях и общем переключателе VisionHotkeys.
+  OreHighlight индексирует только загруженные секции чанков. Palettes
+  позволяют пропускать секции без поддерживаемых руд. Кэш пополняется
+  по секциям на ходу; ограничение выбирает ближайшие открытые руды.
+  Контур слегка вынесен за поверхность блока, использует глубину мира.
+  Адаптивный режим ограничивает работу и количество контуров, сохраняя
+  выбранный радиус. Переключение пресета выставляет значение пресета.
+- Item Physics (VisionItemPhysicsMixin) гасит ванильное вращение
+  выпавшей модели и укладывает её при контакте с землёй. Плоские
+  предметы ложатся небольшой стопкой, толстые 3D-модели раскладываются
+  на уровне пола. В полёте остаётся анимация. При OFF возвращается
+  ванильный вид. Не меняй
+  положение ItemEntity и механику подбора ради визуальной правки.
+- Эффекты Spear используют реальный MultiPlayerGameMode.piercingAttack
+  и отложенный импульс Lunge, который отслеживает SpearLungeTrigger.
+  Pierce приходит из ClientboundDamageEventPacket с DamageTypes.SPEAR
+  и sourceCauseId локального игрока. Проверено настоящим ударом и Lunge III,
+  обычная ходьба с копьём эффекта не вызывает. Клиентская геометрия
+  VisionSpearEffects не меняет механику копья.
+- VisionPetRenderer + PetMotion — локальный 3D-питомец. Плавное движение
+  по сторонам с задержкой относительно камеры, мягкий возврат,
+  сглаженная высота в прыжке. Учитывай самый короткий путь через ±180°,
+  телепорт, смену игрока/мира и F5. Лишнюю цветную коробку пользователь
+  заметил в F5. Исправлены реальные причины рядом с камерой: пример
+  Custom Models теперь использует yaw корпуса и расположен на спине,
+  декорации скрываются при близкой камере. Точный объект по одному
+  описанию не идентифицирован. В буферах мира держи согласованный
+  материал и баланс pose stack, чтобы не вернуть сбой «Not building».
+- FPS Boost (VisionRenderBoost), бюджеты VisionPerformance, кэш
+  VisionSignOptimizer, фильтр частиц работают отдельно от GUI.
+  Сохраняй явное включение Air Hearts/Snowflakes даже в MAX FPS и
+  при фильтрации обычных частиц. Проверяй восстановление сохранённых
+  видеонастроек. Изменения рендера клиента сами по себе не меняют TPS.
+
+World Lyrics и музыка
+- Требование владельца: видны слова песни в темп с музыкой как отдельная
+  2D-плоскость в мире перед персонажем, видимая из камеры. VisionWorldLyrics рисует
+  её в END_MAIN с отдельным Font buffer, обычной глубиной и читаемым
+  текстом с обеих сторон. WorldLyricMotion берёт позицию и yaw игрока
+  с плавным следованием. Free Look и F5 меняют точку наблюдения;
+  текст сохраняет мировую позицию, меняет перспективный размер,
+  перекрывается стеной. Привязка anchor к camera.position, SEE_THROUGH,
+  отрицательный масштаб X и дубликат в HUD приносили регрессии.
+- SystemMediaReader и SystemMediaTrack читают Windows Media Control
+  через встроенный PowerShell или Linux MPRIS через gdbus. Медиаплеер
+  передаёт позицию, паузу, скорость и длительность при наличии. macOS
+  пока без автоматического чтения. VisionLyricsSource и LrcTimeline
+  используют известную позицию, уважают паузу, перемотку и пустые
+  интервалы. При отсутствии музыки и локальных строк плоскость пуста.
+- VisionLyricsLookup + LyricsSearch проверяют название, артистов, версию
+  и длительность. Источники: LRCLIB, Яндекс Музыка с личным доступом и
+  запасной lyrics.ovh. Важны таймкоды конкретной записи. При смене
+  композиции отменяй устаревшие запросы. Название песни показывается
+  в статусе настроек, в мире выводятся слова.
+- В настройках есть импорт LRC/обычного текста и ручная позиция,
+  пауза, синхронизация с проигрывателем, листание обычных строк. Это
+  запасной пользовательский режим. Источники могут не иметь текста,
+  таймкодов или нужной записи. Не придумывай время строк и не объявляй
+  проверенным покрытие всех песен. Свои строки и локальный LRC
+  необязательны для автоматического режима.
+- Яндекс: VisionYandexScreen, YandexMusicAccess, YandexLyricsClient.
+  Пользователь вводит свой OAuth в игре. Токен маскируется, нужен
+  только в памяти текущего запуска, не записывается в профили и не
+  уходит на сторонний URL скачивания текста. Не проси присылать его
+  в чат и не печатай в логах. HTTP-fixture проверяет работу протокола;
+  настоящий вход и закрытые тексты Яндекса не подтверждены. Публичный
+  запрос из CI возвращал HTTP 451, у клиента есть статус для этого.
+- «Священная война» — пользователь просил показ с живым проигрыванием
+  и автоматической загрузкой. В qa/sacred-war проводились отдельные
+  попытки подбора записи и таймкодов. Успешный кадр с подтверждённым
+  совпадением записи не получен. Если к задаче вернутся, проверить
+  легально доступную конкретную запись, её медиасессию и реальные
+  совпадающие таймкоды. Вставленный текст не выполнит этот запрос.
+
+=== ПРОВЕРКА И ВЫПУСК ===
+
+Команды из корня репозитория
+
+  bash tests/run-core.sh
+  gradle build --no-daemon --max-workers=2
+  gradle -PvisualGameTest gametestClasses inspectMinecraftHooks downloadAssets --no-daemon --max-workers=2
+  xvfb-run -a gradle -PvisualGameTest runClientGameTest --no-daemon --max-workers=2
+  gradle -PvisualGameTest verifyLiveLyrics --no-daemon --max-workers=2
+
+Для клиента Minecraft без дисплея бери настройки Xvfb/Mesa из
+.github/workflows/world-visual.yml. Изолированный Linux MPRIS проверяет
+bash tests/run-mpris.sh с gdbus, dbus-run-session и dbus-next. Нативный
+Windows API проверяет .github/workflows/native-media.yml. В прошлой
+облачной среде не было Gradle и полного JDK. Проверяй наличие локальных
+инструментов; при отсутствии используй доступный CI и его логи.
+
+Тесты живого клиента лежат в src/gametest/java/com/visionmod.
+VisualWorldGameTest оркестрирует общий прогон. InspectMinecraftHooks
+показывает реальные вызовы Minecraft, полезен при проблемах с mixin.
+Компиляция Java сама по себе не проверяет точки инъекций. При визуальной
+регрессии проверяй пиксели framebuffer и клики/движение в реальном мире.
+Для парных сценариев проверь OFF, смену состояния и возврат к обычному
+поведению. Не заменяй всю игровую проверку фактом вызова renderer.
+
+Рабочие workflows — build.yml, client-smoke.yml, world-visual.yml.
+Стартовый smoke проверяет 55 переключателей и кадры редакторов.
+world-visual запускает реальный интегрированный мир, публичный lookup
+и выделенный сервер. LiveLyricsSmoke подтверждает доступность обычного
+публичного запроса LRCLIB, отдельно от настоящего аудио игрока.
+tests/publish-evidence.sh публикует build/, smoke/ и world/ в
+codex/visual-evidence. В каждом каталоге есть source.json с code SHA и
+Actions run. Сверь его с твоим коммитом перед тем, как отправлять JAR,
+лог или кадр. Выходные папки обновляются независимо, в отчёте лучше
+ссылаться на неизменяемый evidence SHA.
+
+Последнее подтверждённое состояние перед этим промтом
+- Коммит исходников и игровых тестов b3a7126d843ada1b7a8e3516220778ea3703dca1.
+  Код исправлений b4058dd, следом поправлен выбор тестовой сущности.
+  README с последней сборкой обновлён в 0381ba64c84900d33f8bf10999cbd4f4e7fc7614.
+- Build 45129594855, startup smoke 45129594861, world 45129594915 —
+  успешны. Игровой лог подтверждает INVISIBILITY, ORE, FRIEND_ZONE,
+  WORLDTEST. Тест руды проверяет 48/64, обе оси, границу 65, замену
+  блока, выключение типа руды и реальные цветные пиксели на 64 блоках.
+  Тест инвиза проверяет прежнюю выбранную цель, удар, эффект невидимости
+  от сервера и появление цели после его снятия.
+- JAR 5 861 485 байт, SHA-256
+  5702d1c5a61c14ec9c9e87b4c37fdfcef3587e44afcfb653e71261bf98135b27.
+  https://github.com/De1po3oN/VisionMod-2.0.0/raw/ddd8a79243b0f78f321979d6eec6169590b69f44/build/visionmod-2.0.0.jar
+- Лог мира и кадр с рудой на 64 блоках
+  https://raw.githubusercontent.com/De1po3oN/VisionMod-2.0.0/76e21b8114157d79cffdb047d8696a171775b517/world/world-client.log
+  https://raw.githubusercontent.com/De1po3oN/VisionMod-2.0.0/76e21b8114157d79cffdb047d8696a171775b517/world/40-ore-highlight-64-blocks.png
+- Открытые вопросы качества — совместимость с Sodium/Iris и нужными
+  модпаками, измеренный FPS на загруженном спавне, живое воспроизведение
+  и закрытые тексты Яндекса, показ «Священной войны». Camera Streaks
+  даёт полосы движения; полноценное размытие кадров пока отсутствует.
+  Проверенная область ограничена конкретными сценариями, все 35 пунктов
+  ещё не прошли полную приёмку.
+
+=== ГДЕ ПРОДОЛЖИТЬ ЧТЕНИЕ ===
+
+- README.md — текущая установка и возможности. FEATURE_REQUESTS_2_0_0.md
+  и QA_35_QUALITY_GATE_RU.md — исторические требования и критерии QA.
+- GUI_REDESIGN_QA_RU.md, CONTROLS_LYRICS_QA_RU.md,
+  SCROLLER_MENU_SESSION_QA_RU.md, PET_FOLLOW_AND_F5_QA_RU.md — GUI,
+  управление, инвентарь и питомец.
+- WORLD_LYRICS_PLANE_QA_RU.md, WORLD_LYRICS_BADGE_QA_RU.md,
+  YANDEX_LYRICS_QA_RU.md, LYRICS_API_NOTES.md — рендер, метки и музыка.
+  REFERENCE_REFRESH_QA_RU.md — Inter, анимации, Spear.
+- Прежняя версия FOR_AI.txt доступна через
+  git show 0381ba64c84900d33f8bf10999cbd4f4e7fc7614:FOR_AI.txt
+  https://github.com/De1po3oN/VisionMod-2.0.0/blob/0381ba64c84900d33f8bf10999cbd4f4e7fc7614/FOR_AI.txt
+  Там есть ранние диагностики и отдельные ссылки на старые сборки.
+  Для актуальных требований используй новый файл, свежий код и задачу
+  пользователя. Старые записи про расширение, версию 1.0.0, положение
+  Free Look после отпускания и HUD-версию Lyrics относятся к прошлому.
+
+После существенного этапа актуализируй эту памятку короткой записью
+с датой, веткой, code SHA, точными проверками и тем, что осталось
+открытым. Следующая ИИ должна видеть состояние продукта, уметь найти
+нужный код и повторить подтверждение результата.
